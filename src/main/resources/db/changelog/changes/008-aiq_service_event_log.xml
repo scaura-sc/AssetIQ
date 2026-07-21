@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd">
+
+    <changeSet id="008-1-create-aiq_service_event_log" author="assetiq">
+        <createTable tableName="aiq_service_event_log">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="tenant_id" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+
+            <!-- Common -->
+            <column name="event_number" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="event_type" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <!-- Soft reference to aiq_asset.id — no FK -->
+            <column name="asset_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="asset_number" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="outlet_code" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="visit_id" type="VARCHAR(50)"/>
+            <column name="priority" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(30)" defaultValue="OPEN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(500)"/>
+            <column name="raised_by_user_code" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="assigned_to_user_code" type="VARCHAR(50)"/>
+            <column name="resolved_at" type="TIMESTAMP"/>
+            <column name="closed_at" type="TIMESTAMP"/>
+            <column name="resolution_notes" type="VARCHAR(500)"/>
+            <column name="photo_url_1" type="VARCHAR(500)"/>
+            <column name="photo_url_2" type="VARCHAR(500)"/>
+            <column name="photo_after_url" type="VARCHAR(500)"/>
+            <column name="signature_url" type="VARCHAR(500)"/>
+            <column name="gps_lat" type="DECIMAL(10,8)"/>
+            <column name="gps_lng" type="DECIMAL(11,8)"/>
+
+            <!-- COMPLAINT-only -->
+            <column name="complaint_type" type="VARCHAR(50)"/>
+            <column name="is_under_warranty" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_repeated" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="parent_event_number" type="VARCHAR(20)"/>
+            <column name="customer_rating" type="TINYINT"/>
+
+            <!-- WORK_ORDER-only -->
+            <column name="wo_type" type="VARCHAR(20)"/>
+            <column name="triggered_by" type="VARCHAR(20)"/>
+            <column name="planned_date" type="DATE"/>
+            <column name="started_at" type="TIMESTAMP"/>
+            <column name="completed_at" type="TIMESTAMP"/>
+            <column name="labour_cost" type="DECIMAL(10,2)"/>
+            <column name="parts_cost" type="DECIMAL(10,2)"/>
+            <column name="total_cost" type="DECIMAL(10,2)"/>
+            <column name="checklist_summary" type="VARCHAR(1000)"/>
+
+            <!-- common (cont.) -->
+            <column name="raised_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="008-2-index-aiq_service_event_log-number" author="assetiq">
+        <createIndex tableName="aiq_service_event_log" indexName="ux_service_event_tenant_type_number" unique="true">
+            <column name="tenant_id"/>
+            <column name="event_type"/>
+            <column name="event_number"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="008-3-index-aiq_service_event_log-asset" author="assetiq">
+        <createIndex tableName="aiq_service_event_log" indexName="idx_service_event_tenant_asset">
+            <column name="tenant_id"/>
+            <column name="asset_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="008-4-index-aiq_service_event_log-status" author="assetiq">
+        <createIndex tableName="aiq_service_event_log" indexName="idx_service_event_tenant_status">
+            <column name="tenant_id"/>
+            <column name="status"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

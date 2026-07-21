@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd">
+
+    <!--
+        One include per table, in dependency order (masters, then association,
+        then transaction tables). No changeset anywhere in changes/ may use
+        <foreignKeyConstraint> — every cross-table reference (e.g. asset_id) is
+        a soft reference enforced at the application/service layer only, per
+        the no-FK design rule. Likewise, no changeset may use vendor-specific
+        column types (JSONB, native arrays, DB enums) or hardcode DATETIME vs
+        TIMESTAMP — column types must be expressed so they render correctly on
+        both MySQL 8+ and Postgres 15+.
+    -->
+
+    <include file="db/changelog/changes/001-aiq_role_config.xml" relativeToChangelogFile="false"/>
+    <include file="db/changelog/changes/002-aiq_asset_catalog.xml" relativeToChangelogFile="false"/>
+    <include file="db/changelog/changes/003-aiq_vendor.xml" relativeToChangelogFile="false"/>
+    <include file="db/changelog/changes/004-aiq_asset.xml" relativeToChangelogFile="false"/>
+    <include file="db/changelog/changes/005-aiq_asset_association.xml" relativeToChangelogFile="false"/>
+    <include file="db/changelog/changes/006-aiq_asset_movement_log.xml" relativeToChangelogFile="false"/>
+    <include file="db/changelog/changes/007-aiq_visit_asset_capture.xml" relativeToChangelogFile="false"/>
+    <include file="db/changelog/changes/008-aiq_service_event_log.xml" relativeToChangelogFile="false"/>
+    <include file="db/changelog/changes/009-aiq_iot_telemetry_log.xml" relativeToChangelogFile="false"/>
+    <include file="db/changelog/changes/010-aiq_ai_vision_result_log.xml" relativeToChangelogFile="false"/>
+
+</databaseChangeLog>

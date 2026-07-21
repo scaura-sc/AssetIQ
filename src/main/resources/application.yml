@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: asset-iq
+
+  # Default to mysql locally when no profile is passed. The `mysql`/`postgres`
+  # Maven profiles override this via -Dspring.profiles.active for tests; in a
+  # real deployment set SPRING_PROFILES_ACTIVE explicitly per environment.
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:mysql}
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      # Liquibase owns the schema; Hibernate only validates the entity
+      # mappings match it — never let Hibernate generate/alter DDL.
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.xml
+
+server:
+  port: ${SERVER_PORT:8080}
+
+logging:
+  level:
+    liquibase: INFO

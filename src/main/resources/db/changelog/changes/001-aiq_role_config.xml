@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd">
+
+    <changeSet id="001-1-create-aiq_role_config" author="assetiq">
+        <createTable tableName="aiq_role_config">
+            <!-- Application-generated Snowflake id — no autoIncrement, see SnowflakeIdGenerator -->
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="tenant_id" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_code" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="asset_capture_eligible" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(255)"/>
+            <!-- No foreign keys: this table has none, and no other table may
+                 declare a DB-level FK onto it either — role_code is a soft
+                 reference validated in the service layer. -->
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="001-2-index-aiq_role_config" author="assetiq">
+        <createIndex tableName="aiq_role_config" indexName="ux_role_config_tenant_role" unique="true">
+            <column name="tenant_id"/>
+            <column name="role_code"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

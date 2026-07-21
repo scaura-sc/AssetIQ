@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd">
+
+    <changeSet id="002-1-create-aiq_asset_catalog" author="assetiq">
+        <createTable tableName="aiq_asset_catalog">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="tenant_id" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="level" type="VARCHAR(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="code" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <!-- Soft reference to another row's `code` in the same tenant; no FK. -->
+            <column name="parent_code" type="VARCHAR(30)"/>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="manufacturer_name" type="VARCHAR(100)"/>
+            <column name="manufacturer_country" type="VARCHAR(50)"/>
+            <column name="manufacturer_contact_email" type="VARCHAR(100)"/>
+            <column name="manufacturer_contact_phone" type="VARCHAR(20)"/>
+            <column name="default_warranty_months" type="SMALLINT"/>
+            <column name="default_useful_life_years" type="SMALLINT"/>
+            <column name="default_depreciation_method" type="VARCHAR(5)"/>
+            <column name="default_pm_frequency_days" type="SMALLINT"/>
+            <column name="default_purity_clause_pct" type="DECIMAL(5,2)"/>
+            <column name="capacity" type="DECIMAL(10,2)"/>
+            <column name="capacity_unit" type="VARCHAR(20)"/>
+            <column name="is_active" type="BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="002-2-index-aiq_asset_catalog" author="assetiq">
+        <createIndex tableName="aiq_asset_catalog" indexName="ux_asset_catalog_tenant_level_code" unique="true">
+            <column name="tenant_id"/>
+            <column name="level"/>
+            <column name="code"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="002-3-index-aiq_asset_catalog-parent" author="assetiq">
+        <createIndex tableName="aiq_asset_catalog" indexName="idx_asset_catalog_tenant_parent_code">
+            <column name="tenant_id"/>
+            <column name="parent_code"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

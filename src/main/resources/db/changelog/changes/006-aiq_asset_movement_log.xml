@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd">
+
+    <changeSet id="006-1-create-aiq_asset_movement_log" author="assetiq">
+        <createTable tableName="aiq_asset_movement_log">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="tenant_id" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <!-- Soft reference to aiq_asset.id — no FK -->
+            <column name="asset_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="asset_number" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="movement_type" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="from_location_type" type="VARCHAR(20)"/>
+            <column name="from_location_code" type="VARCHAR(50)"/>
+            <column name="to_location_type" type="VARCHAR(20)"/>
+            <column name="to_location_code" type="VARCHAR(50)"/>
+            <column name="moved_by_user_code" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="approved_by_user_code" type="VARCHAR(50)"/>
+            <column name="approval_ref" type="VARCHAR(50)"/>
+            <column name="reason" type="VARCHAR(255)"/>
+            <column name="gps_lat" type="DECIMAL(10,8)"/>
+            <column name="gps_lng" type="DECIMAL(11,8)"/>
+            <column name="photo_before_url" type="VARCHAR(500)"/>
+            <column name="photo_after_url" type="VARCHAR(500)"/>
+            <column name="signature_url" type="VARCHAR(500)"/>
+            <column name="notes" type="VARCHAR(500)"/>
+            <column name="moved_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="006-2-index-aiq_asset_movement_log" author="assetiq">
+        <createIndex tableName="aiq_asset_movement_log" indexName="idx_asset_movement_tenant_asset">
+            <column name="tenant_id"/>
+            <column name="asset_id"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

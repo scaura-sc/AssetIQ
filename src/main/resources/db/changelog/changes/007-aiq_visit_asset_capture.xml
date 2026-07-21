@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd">
+
+    <changeSet id="007-1-create-aiq_visit_asset_capture" author="assetiq">
+        <createTable tableName="aiq_visit_asset_capture">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="tenant_id" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="visit_id" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="visit_date" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="outlet_code" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="territory_code" type="VARCHAR(30)"/>
+            <column name="salesman_code" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <!-- Soft reference to aiq_asset.id — no FK -->
+            <column name="asset_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="asset_number" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_planned_visit" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="presence_status" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="scan_method" type="VARCHAR(20)"/>
+            <column name="scan_value" type="VARCHAR(100)"/>
+            <column name="purity_raw_score" type="TINYINT"/>
+            <column name="purity_pct" type="DECIMAL(5,2)"/>
+            <column name="purity_source" type="VARCHAR(20)" defaultValue="MANUAL">
+                <constraints nullable="false"/>
+            </column>
+            <column name="purity_ai_confidence" type="DECIMAL(5,2)"/>
+            <column name="condition_grade" type="VARCHAR(20)"/>
+            <column name="condition_source" type="VARCHAR(20)" defaultValue="MANUAL">
+                <constraints nullable="false"/>
+            </column>
+            <column name="condition_ai_confidence" type="DECIMAL(5,2)"/>
+            <column name="working_status" type="VARCHAR(20)"/>
+            <column name="working_status_source" type="VARCHAR(20)" defaultValue="MANUAL">
+                <constraints nullable="false"/>
+            </column>
+            <column name="competitor_present" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="competitor_brand" type="VARCHAR(50)"/>
+            <column name="competitor_pct" type="DECIMAL(5,2)"/>
+            <column name="branding_status" type="VARCHAR(20)"/>
+            <column name="photo_url_1" type="VARCHAR(500)"/>
+            <column name="photo_url_2" type="VARCHAR(500)"/>
+            <column name="photo_url_3" type="VARCHAR(500)"/>
+            <column name="gps_lat" type="DECIMAL(10,8)"/>
+            <column name="gps_lng" type="DECIMAL(11,8)"/>
+            <column name="gps_accuracy_m" type="DECIMAL(8,2)"/>
+            <column name="captured_offline" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="synced_at" type="TIMESTAMP"/>
+            <column name="captured_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="notes" type="VARCHAR(500)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="007-2-index-aiq_visit_asset_capture-asset" author="assetiq">
+        <createIndex tableName="aiq_visit_asset_capture" indexName="idx_visit_capture_tenant_asset">
+            <column name="tenant_id"/>
+            <column name="asset_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="007-3-index-aiq_visit_asset_capture-visit" author="assetiq">
+        <createIndex tableName="aiq_visit_asset_capture" indexName="idx_visit_capture_tenant_visit">
+            <column name="tenant_id"/>
+            <column name="visit_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="007-4-index-aiq_visit_asset_capture-outlet" author="assetiq">
+        <createIndex tableName="aiq_visit_asset_capture" indexName="idx_visit_capture_tenant_outlet">
+            <column name="tenant_id"/>
+            <column name="outlet_code"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

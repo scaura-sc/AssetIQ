@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd">
+
+    <changeSet id="004-1-create-aiq_asset" author="assetiq">
+        <createTable tableName="aiq_asset">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="tenant_id" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+
+            <!-- Identity -->
+            <column name="asset_number" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="serial_number" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="asset_name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <!-- Soft references into aiq_asset_catalog (by level) — no FK -->
+            <column name="category_code" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type_code" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="model_code" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <!-- Soft reference into aiq_vendor — no FK -->
+            <column name="vendor_code" type="VARCHAR(30)"/>
+            <column name="brand_code" type="VARCHAR(30)"/>
+            <column name="division_code" type="VARCHAR(30)"/>
+            <column name="company_code" type="VARCHAR(20)"/>
+            <column name="capacity" type="DECIMAL(10,2)"/>
+            <column name="capacity_unit" type="VARCHAR(20)"/>
+            <column name="colour" type="VARCHAR(30)"/>
+
+            <!-- Commercial / warranty / AMC -->
+            <column name="purchase_date" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="purchase_price" type="DECIMAL(14,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="purchase_order_ref" type="VARCHAR(50)"/>
+            <column name="invoice_ref" type="VARCHAR(50)"/>
+            <column name="manufacturing_date" type="DATE"/>
+            <column name="warranty_start_date" type="DATE"/>
+            <column name="warranty_end_date" type="DATE"/>
+            <column name="warranty_type" type="VARCHAR(20)"/>
+            <column name="amc_start_date" type="DATE"/>
+            <column name="amc_end_date" type="DATE"/>
+            <!-- Soft reference into aiq_vendor — no FK -->
+            <column name="amc_vendor_code" type="VARCHAR(30)"/>
+            <column name="depreciation_method" type="VARCHAR(5)"/>
+            <column name="useful_life_years" type="SMALLINT"/>
+            <column name="residual_value" type="DECIMAL(14,2)"/>
+
+            <!-- Status / location -->
+            <column name="asset_status" type="VARCHAR(30)" defaultValue="STOCK">
+                <constraints nullable="false"/>
+            </column>
+            <column name="working_status" type="VARCHAR(20)"/>
+            <column name="condition_grade" type="VARCHAR(20)"/>
+            <column name="location_type" type="VARCHAR(20)"/>
+            <!-- Generic soft reference; meaning depends on location_type — no FK -->
+            <column name="location_code" type="VARCHAR(50)"/>
+            <column name="territory_code" type="VARCHAR(30)"/>
+            <column name="salesman_code" type="VARCHAR(30)"/>
+            <column name="installation_date" type="DATE"/>
+            <column name="last_visit_date" type="DATE"/>
+            <column name="last_visit_id" type="VARCHAR(50)"/>
+
+            <!-- AHS (Asset Health Score) -->
+            <column name="ahs_score" type="DECIMAL(5,2)"/>
+            <column name="ahs_presence_score" type="DECIMAL(5,2)"/>
+            <column name="ahs_purity_score" type="DECIMAL(5,2)"/>
+            <column name="ahs_condition_score" type="DECIMAL(5,2)"/>
+            <column name="ahs_uptime_score" type="DECIMAL(5,2)"/>
+            <column name="ahs_pl_factor" type="DECIMAL(5,2)"/>
+            <column name="ahs_confidence_level" type="VARCHAR(10)"/>
+            <column name="ahs_calculated_at" type="TIMESTAMP"/>
+            <column name="ahs_stale_flag" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ahs_stale_since" type="TIMESTAMP"/>
+
+            <!-- Media / docs -->
+            <column name="primary_photo_url" type="VARCHAR(500)"/>
+            <column name="document_refs" type="VARCHAR(1000)"/>
+
+            <!-- Actor audit -->
+            <column name="created_by" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_active" type="BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="004-2-index-aiq_asset-number" author="assetiq">
+        <createIndex tableName="aiq_asset" indexName="ux_asset_tenant_asset_number" unique="true">
+            <column name="tenant_id"/>
+            <column name="asset_number"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="004-3-index-aiq_asset-serial" author="assetiq">
+        <createIndex tableName="aiq_asset" indexName="ux_asset_tenant_category_serial" unique="true">
+            <column name="tenant_id"/>
+            <column name="category_code"/>
+            <column name="serial_number"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="004-4-index-aiq_asset-location" author="assetiq">
+        <createIndex tableName="aiq_asset" indexName="idx_asset_tenant_location">
+            <column name="tenant_id"/>
+            <column name="location_type"/>
+            <column name="location_code"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

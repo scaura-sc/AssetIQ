@@ -9,6 +9,8 @@ import java.util.Optional;
 
 public interface VendorRepository extends JpaRepository<AiqVendor, Long> {
 
+    Optional<AiqVendor> findByTenantIdAndId(String tenantId, Long id);
+
     Optional<AiqVendor> findByTenantIdAndVendorCode(String tenantId, String vendorCode);
 
     List<AiqVendor> findByTenantIdAndVendorType(String tenantId, VendorType vendorType);

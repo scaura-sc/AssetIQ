@@ -9,6 +9,8 @@ import java.util.Optional;
 
 public interface AssetAssociationRepository extends JpaRepository<AiqAssetAssociation, Long> {
 
+    Optional<AiqAssetAssociation> findByTenantIdAndId(String tenantId, Long id);
+
     List<AiqAssetAssociation> findByTenantIdAndAssetId(String tenantId, Long assetId);
 
     Optional<AiqAssetAssociation> findByTenantIdAndAssetIdAndIsActiveTrue(String tenantId, Long assetId);

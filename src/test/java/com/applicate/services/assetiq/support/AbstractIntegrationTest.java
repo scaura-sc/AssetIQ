@@ -1,6 +1,7 @@
 package com.applicate.services.assetiq.support;
 
 import org.junit.jupiter.api.AfterAll;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -29,8 +30,15 @@ import org.testcontainers.containers.PostgreSQLContainer;
  * methods against whatever repository they're covering — the datasource,
  * dialect, and Liquibase changelog are already wired via the active Spring
  * profile.
+ *
+ * <p>webEnvironment=MOCK (rather than NONE) + {@code @AutoConfigureMockMvc} so
+ * controller-level IT classes can drive the real REST layer (TenantFilter,
+ * controllers, GlobalExceptionHandler) via {@code MockMvc} without binding an
+ * actual port; this is backward compatible with the plain repository ITs,
+ * which just ignore the MockMvc bean.
  */
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@AutoConfigureMockMvc
 public abstract class AbstractIntegrationTest {
 
     private static final String ENGINE = System.getProperty("spring.profiles.active", "mysql");

@@ -10,6 +10,8 @@ import java.util.Optional;
 
 public interface AssetRepository extends JpaRepository<AiqAsset, Long> {
 
+    Optional<AiqAsset> findByTenantIdAndId(String tenantId, Long id);
+
     Optional<AiqAsset> findByTenantIdAndAssetNumber(String tenantId, String assetNumber);
 
     Optional<AiqAsset> findByTenantIdAndCategoryCodeAndSerialNumber(String tenantId, String categoryCode, String serialNumber);
@@ -17,4 +19,6 @@ public interface AssetRepository extends JpaRepository<AiqAsset, Long> {
     List<AiqAsset> findByTenantIdAndLocationTypeAndLocationCode(String tenantId, LocationType locationType, String locationCode);
 
     List<AiqAsset> findByTenantIdAndAssetStatus(String tenantId, AssetStatus assetStatus);
+
+    List<AiqAsset> findByTenantIdAndTerritoryCode(String tenantId, String territoryCode);
 }

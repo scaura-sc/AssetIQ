@@ -9,6 +9,8 @@ import java.util.Optional;
 
 public interface RoleConfigRepository extends JpaRepository<AiqRoleConfig, Long> {
 
+    Optional<AiqRoleConfig> findByTenantIdAndId(String tenantId, Long id);
+
     Optional<AiqRoleConfig> findByTenantIdAndRoleCode(String tenantId, RoleCode roleCode);
 
     List<AiqRoleConfig> findByTenantId(String tenantId);

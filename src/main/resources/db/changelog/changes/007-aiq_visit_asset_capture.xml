@@ -3,7 +3,7 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd">
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd">
 
     <changeSet id="007-1-create-aiq_visit_asset_capture" author="assetiq">
         <createTable tableName="aiq_visit_asset_capture">
@@ -41,7 +41,7 @@
             </column>
             <column name="scan_method" type="VARCHAR(20)"/>
             <column name="scan_value" type="VARCHAR(100)"/>
-            <column name="purity_raw_score" type="TINYINT"/>
+            <column name="purity_raw_score" type="SMALLINT"/>
             <column name="purity_pct" type="DECIMAL(5,2)"/>
             <column name="purity_source" type="VARCHAR(20)" defaultValue="MANUAL">
                 <constraints nullable="false"/>

@@ -3,7 +3,7 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd">
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd">
 
     <changeSet id="008-1-create-aiq_service_event_log" author="assetiq">
         <createTable tableName="aiq_service_event_log">
@@ -62,7 +62,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="parent_event_number" type="VARCHAR(20)"/>
-            <column name="customer_rating" type="TINYINT"/>
+            <column name="customer_rating" type="SMALLINT"/>
 
             <!-- WORK_ORDER-only -->
             <column name="wo_type" type="VARCHAR(20)"/>

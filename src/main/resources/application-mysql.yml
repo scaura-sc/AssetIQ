@@ -7,6 +7,14 @@ spring:
 
   jpa:
     database-platform: org.hibernate.dialect.MySQLDialect
+    properties:
+      hibernate:
+        # Liquibase's generic BOOLEAN type creates tinyint(1) on MySQL (the
+        # MySQL convention), but Hibernate 6's MySQLDialect otherwise expects
+        # BIT for java.lang.Boolean during schema validation. Align it so
+        # `ddl-auto: validate` doesn't flag every boolean column as a mismatch.
+        type:
+          preferred_boolean_jdbc_type: TINYINT
 
   liquibase:
     driver-class-name: com.mysql.cj.jdbc.Driver

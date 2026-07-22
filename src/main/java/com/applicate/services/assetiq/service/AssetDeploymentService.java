@@ -30,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Set;
 
 /** F05 (deploy), F06 (transfer), F07 (swap) — asset deployment and movement. */
@@ -307,5 +308,23 @@ public class AssetDeploymentService {
         return new SwapResponse(
                 AssetResponse.from(oldAsset), AssetResponse.from(newAsset), AssociationResponse.from(newAssociation),
                 MovementLogResponse.from(swapOut), MovementLogResponse.from(swapIn), swapReference);
+    }
+
+    // ---- Read-only history (backs the asset detail view) ----
+
+    public AssociationResponse getCurrentAssociation(Long assetId) {
+        return activeAssociationValidator.findActive(TenantContext.getTenantId(), assetId)
+                .map(AssociationResponse::from)
+                .orElse(null);
+    }
+
+    public List<AssociationResponse> listAssociationHistory(Long assetId) {
+        return assetAssociationRepository.findByTenantIdAndAssetId(TenantContext.getTenantId(), assetId)
+                .stream().map(AssociationResponse::from).toList();
+    }
+
+    public List<MovementLogResponse> listMovementHistory(Long assetId) {
+        return assetMovementLogRepository.findByTenantIdAndAssetIdOrderByMovedAtDesc(TenantContext.getTenantId(), assetId)
+                .stream().map(MovementLogResponse::from).toList();
     }
 }

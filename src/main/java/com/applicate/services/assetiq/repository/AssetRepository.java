@@ -12,6 +12,8 @@ public interface AssetRepository extends JpaRepository<AiqAsset, Long> {
 
     Optional<AiqAsset> findByTenantIdAndId(String tenantId, Long id);
 
+    List<AiqAsset> findByTenantIdOrderByCreatedAtDesc(String tenantId);
+
     Optional<AiqAsset> findByTenantIdAndAssetNumber(String tenantId, String assetNumber);
 
     Optional<AiqAsset> findByTenantIdAndCategoryCodeAndSerialNumber(String tenantId, String categoryCode, String serialNumber);

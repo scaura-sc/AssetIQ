@@ -15,6 +15,8 @@ import com.applicate.services.assetiq.validation.ReferenceValidationService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /** F02 — Asset Registration (aiq_asset). Deploy/transfer/swap (F05-F07) are added alongside Module 2. */
 @Service
 @Transactional
@@ -91,6 +93,11 @@ public class AssetService {
 
     public AssetResponse get(Long id) {
         return AssetResponse.from(requireOwned(id));
+    }
+
+    public List<AssetResponse> list() {
+        return assetRepository.findByTenantIdOrderByCreatedAtDesc(TenantContext.getTenantId())
+                .stream().map(AssetResponse::from).toList();
     }
 
     AiqAsset requireOwned(Long id) {

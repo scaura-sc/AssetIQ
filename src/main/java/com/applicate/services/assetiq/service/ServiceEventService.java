@@ -145,6 +145,13 @@ public class ServiceEventService {
         return ServiceEventResponse.from(serviceEventLogRepository.save(event));
     }
 
+    /** Assign/reassign a technician — independent of status/event_type, works on any open or closed event. */
+    public ServiceEventResponse assign(Long id, String assignedToUserCode) {
+        AiqServiceEventLog event = requireOwned(id);
+        event.setAssignedToUserCode(assignedToUserCode);
+        return ServiceEventResponse.from(serviceEventLogRepository.save(event));
+    }
+
     /** F15 closure — photo_after_url/signature_url are enforced by CloseWorkOrderRequest's @NotBlank. */
     public ServiceEventResponse close(Long id, CloseWorkOrderRequest request) {
         AiqServiceEventLog event = requireOwned(id);
@@ -201,7 +208,8 @@ public class ServiceEventService {
     // ---- F17 Service Dashboard & SLA Tracking ----
 
     public List<ServiceEventDashboardItem> search(EventType eventType, EventStatus status, Priority priority,
-                                                    String territoryCode, String assignedToUserCode,
+                                                    String outletCode, WorkOrderType woType, String territoryCode,
+                                                    String assignedToUserCode,
                                                     LocalDateTime raisedAfter, LocalDateTime raisedBefore) {
         String tenantId = TenantContext.getTenantId();
 
@@ -212,7 +220,7 @@ public class ServiceEventService {
                 : null;
 
         Specification<AiqServiceEventLog> spec = ServiceEventSpecifications.filter(
-                tenantId, eventType, status, priority, assignedToUserCode, raisedAfter, raisedBefore, assetIds);
+                tenantId, eventType, status, priority, outletCode, woType, assignedToUserCode, raisedAfter, raisedBefore, assetIds);
 
         return serviceEventLogRepository.findAll(spec).stream().map(this::toDashboardItem).toList();
     }

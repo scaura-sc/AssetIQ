@@ -4,6 +4,7 @@ import com.applicate.services.assetiq.entity.AiqServiceEventLog;
 import com.applicate.services.assetiq.entity.enums.EventStatus;
 import com.applicate.services.assetiq.entity.enums.EventType;
 import com.applicate.services.assetiq.entity.enums.Priority;
+import com.applicate.services.assetiq.entity.enums.WorkOrderType;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -23,7 +24,8 @@ final class ServiceEventSpecifications {
     }
 
     static Specification<AiqServiceEventLog> filter(String tenantId, EventType eventType, EventStatus status,
-                                                      Priority priority, String assignedToUserCode,
+                                                      Priority priority, String outletCode, WorkOrderType woType,
+                                                      String assignedToUserCode,
                                                       LocalDateTime raisedAfter, LocalDateTime raisedBefore,
                                                       List<Long> assetIds) {
         return (root, query, cb) -> {
@@ -37,6 +39,12 @@ final class ServiceEventSpecifications {
             }
             if (priority != null) {
                 predicates.add(cb.equal(root.get("priority"), priority));
+            }
+            if (outletCode != null) {
+                predicates.add(cb.equal(root.get("outletCode"), outletCode));
+            }
+            if (woType != null) {
+                predicates.add(cb.equal(root.get("woType"), woType));
             }
             if (assignedToUserCode != null) {
                 predicates.add(cb.equal(root.get("assignedToUserCode"), assignedToUserCode));

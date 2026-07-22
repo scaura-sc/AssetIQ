@@ -31,4 +31,7 @@ public interface ServiceEventLogRepository
     /** F16 overdue PM: planned_date passed, work not yet started. */
     List<AiqServiceEventLog> findByTenantIdAndEventTypeAndWoTypeAndPlannedDateBeforeAndStartedAtIsNull(
             String tenantId, EventType eventType, WorkOrderType woType, LocalDate plannedDateBefore);
+
+    /** F17 MTTR: resolved complaints, aggregated by complaint_type in the service layer. */
+    List<AiqServiceEventLog> findByTenantIdAndEventTypeAndResolvedAtIsNotNull(String tenantId, EventType eventType);
 }

@@ -27,4 +27,11 @@
     <include file="db/changelog/changes/009-aiq_iot_telemetry_log.xml" relativeToChangelogFile="false"/>
     <include file="db/changelog/changes/010-aiq_ai_vision_result_log.xml" relativeToChangelogFile="false"/>
 
+    <!--
+        Demo-only seed data (tenant_id = 'coca-cola'). Gated by context="demo"
+        so it never runs on a normal migration — only when the "demo" context
+        is explicitly activated (e.g. SPRING_LIQUIBASE_CONTEXTS=demo).
+    -->
+    <include file="db/changelog/seed/coca-cola-demo-data.xml" relativeToChangelogFile="false" context="demo"/>
+
 </databaseChangeLog>

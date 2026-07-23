@@ -622,4 +622,572 @@
         </insert>
     </changeSet>
 
+    <changeSet id="seed-11-more_outlets_assets" author="assetiq-seed" context="demo">
+        <insert tableName="aiq_asset">
+            <column name="id" valueNumeric="900003004"/>
+            <column name="tenant_id" value="coca-cola"/>
+            <column name="asset_number" value="AST-CC-0004"/>
+            <column name="serial_number" value="SN-CC-1003"/>
+            <column name="asset_name" value="VisiCooler 300L - Unit 3"/>
+            <column name="category_code" value="COOLER"/>
+            <column name="type_code" value="VISI_COOLER"/>
+            <column name="model_code" value="VC-300L"/>
+            <column name="vendor_code" value="V-001"/>
+            <column name="capacity" valueNumeric="300.00"/>
+            <column name="capacity_unit" value="Litres"/>
+            <column name="colour" value="Red"/>
+            <column name="purchase_date" valueDate="2025-05-20"/>
+            <column name="purchase_price" valueNumeric="46000.00"/>
+            <column name="warranty_start_date" valueDate="2025-05-20"/>
+            <column name="warranty_end_date" valueDate="2027-05-20"/>
+            <column name="warranty_type" value="OEM"/>
+            <column name="depreciation_method" value="SLM"/>
+            <column name="useful_life_years" valueNumeric="8"/>
+            <column name="asset_status" value="DEPLOYED"/>
+            <column name="working_status" value="WORKING"/>
+            <column name="condition_grade" value="GOOD"/>
+            <column name="location_type" value="OUTLET"/>
+            <column name="location_code" value="OUT-JAYANAGAR"/>
+            <column name="territory_code" value="TER-BLR-01"/>
+            <column name="salesman_code" value="SM-1001"/>
+            <column name="installation_date" valueDate="2025-05-22"/>
+            <column name="created_by" value="system"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_by" value="system"/>
+            <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+        <insert tableName="aiq_asset">
+            <column name="id" valueNumeric="900003005"/>
+            <column name="tenant_id" value="coca-cola"/>
+            <column name="asset_number" value="AST-CC-0005"/>
+            <column name="serial_number" value="SN-CC-2002"/>
+            <column name="asset_name" value="DeepFreezer 200L - Unit 2"/>
+            <column name="category_code" value="FRIDGE"/>
+            <column name="type_code" value="DEEP_FREEZER"/>
+            <column name="model_code" value="DF-200L"/>
+            <column name="vendor_code" value="V-001"/>
+            <column name="capacity" valueNumeric="200.00"/>
+            <column name="capacity_unit" value="Litres"/>
+            <column name="colour" value="White"/>
+            <column name="purchase_date" valueDate="2025-05-20"/>
+            <column name="purchase_price" valueNumeric="33000.00"/>
+            <column name="warranty_start_date" valueDate="2025-05-20"/>
+            <column name="warranty_end_date" valueDate="2026-11-20"/>
+            <column name="warranty_type" value="OEM"/>
+            <column name="depreciation_method" value="WDV"/>
+            <column name="useful_life_years" valueNumeric="6"/>
+            <column name="asset_status" value="DEPLOYED"/>
+            <column name="working_status" value="WORKING"/>
+            <column name="condition_grade" value="GOOD"/>
+            <column name="location_type" value="OUTLET"/>
+            <column name="location_code" value="OUT-JAYANAGAR"/>
+            <column name="territory_code" value="TER-BLR-01"/>
+            <column name="salesman_code" value="SM-1001"/>
+            <column name="installation_date" valueDate="2025-05-22"/>
+            <column name="created_by" value="system"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_by" value="system"/>
+            <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+        <insert tableName="aiq_asset">
+            <column name="id" valueNumeric="900003006"/>
+            <column name="tenant_id" value="coca-cola"/>
+            <column name="asset_number" value="AST-CC-0006"/>
+            <column name="serial_number" value="SN-CC-1004"/>
+            <column name="asset_name" value="VisiCooler 300L - Unit 4"/>
+            <column name="category_code" value="COOLER"/>
+            <column name="type_code" value="VISI_COOLER"/>
+            <column name="model_code" value="VC-300L"/>
+            <column name="vendor_code" value="V-002"/>
+            <column name="capacity" valueNumeric="300.00"/>
+            <column name="capacity_unit" value="Litres"/>
+            <column name="colour" value="Red"/>
+            <column name="purchase_date" valueDate="2025-07-01"/>
+            <column name="purchase_price" valueNumeric="46500.00"/>
+            <column name="warranty_start_date" valueDate="2025-07-01"/>
+            <column name="warranty_end_date" valueDate="2027-07-01"/>
+            <column name="warranty_type" value="OEM"/>
+            <column name="depreciation_method" value="SLM"/>
+            <column name="useful_life_years" valueNumeric="8"/>
+            <column name="asset_status" value="DEPLOYED"/>
+            <column name="working_status" value="WORKING"/>
+            <column name="condition_grade" value="GOOD"/>
+            <column name="location_type" value="OUTLET"/>
+            <column name="location_code" value="OUT-BANDRA"/>
+            <column name="territory_code" value="TER-MUM-01"/>
+            <column name="salesman_code" value="SM-2001"/>
+            <column name="installation_date" valueDate="2025-07-03"/>
+            <column name="created_by" value="system"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_by" value="system"/>
+            <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+        <insert tableName="aiq_asset">
+            <column name="id" valueNumeric="900003007"/>
+            <column name="tenant_id" value="coca-cola"/>
+            <column name="asset_number" value="AST-CC-0007"/>
+            <column name="serial_number" value="SN-CC-1005"/>
+            <column name="asset_name" value="VisiCooler 300L - Unit 5"/>
+            <column name="category_code" value="COOLER"/>
+            <column name="type_code" value="VISI_COOLER"/>
+            <column name="model_code" value="VC-300L"/>
+            <column name="vendor_code" value="V-002"/>
+            <column name="capacity" valueNumeric="300.00"/>
+            <column name="capacity_unit" value="Litres"/>
+            <column name="colour" value="Silver"/>
+            <column name="purchase_date" valueDate="2025-07-01"/>
+            <column name="purchase_price" valueNumeric="46500.00"/>
+            <column name="warranty_start_date" valueDate="2025-07-01"/>
+            <column name="warranty_end_date" valueDate="2027-07-01"/>
+            <column name="warranty_type" value="OEM"/>
+            <column name="depreciation_method" value="SLM"/>
+            <column name="useful_life_years" valueNumeric="8"/>
+            <column name="asset_status" value="DEPLOYED"/>
+            <column name="working_status" value="WORKING"/>
+            <column name="condition_grade" value="FAIR"/>
+            <column name="location_type" value="OUTLET"/>
+            <column name="location_code" value="OUT-BANDRA"/>
+            <column name="territory_code" value="TER-MUM-01"/>
+            <column name="salesman_code" value="SM-2001"/>
+            <column name="installation_date" valueDate="2025-07-03"/>
+            <column name="created_by" value="system"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_by" value="system"/>
+            <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+        <insert tableName="aiq_asset">
+            <column name="id" valueNumeric="900003008"/>
+            <column name="tenant_id" value="coca-cola"/>
+            <column name="asset_number" value="AST-CC-0008"/>
+            <column name="serial_number" value="SN-CC-2003"/>
+            <column name="asset_name" value="DeepFreezer 200L - Unit 3"/>
+            <column name="category_code" value="FRIDGE"/>
+            <column name="type_code" value="DEEP_FREEZER"/>
+            <column name="model_code" value="DF-200L"/>
+            <column name="vendor_code" value="V-001"/>
+            <column name="capacity" valueNumeric="200.00"/>
+            <column name="capacity_unit" value="Litres"/>
+            <column name="colour" value="White"/>
+            <column name="purchase_date" valueDate="2025-08-15"/>
+            <column name="purchase_price" valueNumeric="33500.00"/>
+            <column name="warranty_start_date" valueDate="2025-08-15"/>
+            <column name="warranty_end_date" valueDate="2027-02-15"/>
+            <column name="warranty_type" value="OEM"/>
+            <column name="depreciation_method" value="WDV"/>
+            <column name="useful_life_years" valueNumeric="6"/>
+            <column name="asset_status" value="DEPLOYED"/>
+            <column name="working_status" value="WORKING"/>
+            <column name="condition_grade" value="GOOD"/>
+            <column name="location_type" value="OUTLET"/>
+            <column name="location_code" value="OUT-ANDHERI"/>
+            <column name="territory_code" value="TER-MUM-01"/>
+            <column name="salesman_code" value="SM-2002"/>
+            <column name="installation_date" valueDate="2025-08-17"/>
+            <column name="created_by" value="system"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_by" value="system"/>
+            <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+        <insert tableName="aiq_asset">
+            <column name="id" valueNumeric="900003009"/>
+            <column name="tenant_id" value="coca-cola"/>
+            <column name="asset_number" value="AST-CC-0009"/>
+            <column name="serial_number" value="SN-CC-1006"/>
+            <column name="asset_name" value="VisiCooler 300L - Unit 6"/>
+            <column name="category_code" value="COOLER"/>
+            <column name="type_code" value="VISI_COOLER"/>
+            <column name="model_code" value="VC-300L"/>
+            <column name="vendor_code" value="V-001"/>
+            <column name="capacity" valueNumeric="300.00"/>
+            <column name="capacity_unit" value="Litres"/>
+            <column name="colour" value="Red"/>
+            <column name="purchase_date" valueDate="2025-09-10"/>
+            <column name="purchase_price" valueNumeric="47000.00"/>
+            <column name="warranty_start_date" valueDate="2025-09-10"/>
+            <column name="warranty_end_date" valueDate="2027-09-10"/>
+            <column name="warranty_type" value="OEM"/>
+            <column name="depreciation_method" value="SLM"/>
+            <column name="useful_life_years" valueNumeric="8"/>
+            <column name="asset_status" value="DEPLOYED"/>
+            <column name="working_status" value="WORKING"/>
+            <column name="condition_grade" value="GOOD"/>
+            <column name="location_type" value="OUTLET"/>
+            <column name="location_code" value="OUT-CP"/>
+            <column name="territory_code" value="TER-DEL-01"/>
+            <column name="salesman_code" value="SM-3001"/>
+            <column name="installation_date" valueDate="2025-09-12"/>
+            <column name="created_by" value="system"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_by" value="system"/>
+            <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+        <insert tableName="aiq_asset">
+            <column name="id" valueNumeric="900003010"/>
+            <column name="tenant_id" value="coca-cola"/>
+            <column name="asset_number" value="AST-CC-0010"/>
+            <column name="serial_number" value="SN-CC-2004"/>
+            <column name="asset_name" value="DeepFreezer 200L - Unit 4"/>
+            <column name="category_code" value="FRIDGE"/>
+            <column name="type_code" value="DEEP_FREEZER"/>
+            <column name="model_code" value="DF-200L"/>
+            <column name="vendor_code" value="V-002"/>
+            <column name="capacity" valueNumeric="200.00"/>
+            <column name="capacity_unit" value="Litres"/>
+            <column name="colour" value="White"/>
+            <column name="purchase_date" valueDate="2025-09-10"/>
+            <column name="purchase_price" valueNumeric="34000.00"/>
+            <column name="warranty_start_date" valueDate="2025-09-10"/>
+            <column name="warranty_end_date" valueDate="2027-03-10"/>
+            <column name="warranty_type" value="OEM"/>
+            <column name="depreciation_method" value="WDV"/>
+            <column name="useful_life_years" valueNumeric="6"/>
+            <column name="asset_status" value="DEPLOYED"/>
+            <column name="working_status" value="NOT_WORKING"/>
+            <column name="condition_grade" value="POOR"/>
+            <column name="location_type" value="OUTLET"/>
+            <column name="location_code" value="OUT-CP"/>
+            <column name="territory_code" value="TER-DEL-01"/>
+            <column name="salesman_code" value="SM-3001"/>
+            <column name="installation_date" valueDate="2025-09-12"/>
+            <column name="created_by" value="system"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_by" value="system"/>
+            <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+        <insert tableName="aiq_asset">
+            <column name="id" valueNumeric="900003011"/>
+            <column name="tenant_id" value="coca-cola"/>
+            <column name="asset_number" value="AST-CC-0011"/>
+            <column name="serial_number" value="SN-CC-1007"/>
+            <column name="asset_name" value="VisiCooler 300L - Unit 7"/>
+            <column name="category_code" value="COOLER"/>
+            <column name="type_code" value="VISI_COOLER"/>
+            <column name="model_code" value="VC-300L"/>
+            <column name="vendor_code" value="V-001"/>
+            <column name="capacity" valueNumeric="300.00"/>
+            <column name="capacity_unit" value="Litres"/>
+            <column name="colour" value="Red"/>
+            <column name="purchase_date" valueDate="2025-10-05"/>
+            <column name="purchase_price" valueNumeric="47000.00"/>
+            <column name="warranty_start_date" valueDate="2025-10-05"/>
+            <column name="warranty_end_date" valueDate="2027-10-05"/>
+            <column name="warranty_type" value="OEM"/>
+            <column name="depreciation_method" value="SLM"/>
+            <column name="useful_life_years" valueNumeric="8"/>
+            <column name="asset_status" value="DEPLOYED"/>
+            <column name="working_status" value="WORKING"/>
+            <column name="condition_grade" value="GOOD"/>
+            <column name="location_type" value="OUTLET"/>
+            <column name="location_code" value="OUT-SAKET"/>
+            <column name="territory_code" value="TER-DEL-01"/>
+            <column name="salesman_code" value="SM-3002"/>
+            <column name="installation_date" valueDate="2025-10-07"/>
+            <column name="created_by" value="system"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_by" value="system"/>
+            <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+        <insert tableName="aiq_asset">
+            <column name="id" valueNumeric="900003012"/>
+            <column name="tenant_id" value="coca-cola"/>
+            <column name="asset_number" value="AST-CC-0012"/>
+            <column name="serial_number" value="SN-CC-2005"/>
+            <column name="asset_name" value="DeepFreezer 200L - Unit 5"/>
+            <column name="category_code" value="FRIDGE"/>
+            <column name="type_code" value="DEEP_FREEZER"/>
+            <column name="model_code" value="DF-200L"/>
+            <column name="vendor_code" value="V-001"/>
+            <column name="capacity" valueNumeric="200.00"/>
+            <column name="capacity_unit" value="Litres"/>
+            <column name="colour" value="White"/>
+            <column name="purchase_date" valueDate="2025-10-20"/>
+            <column name="purchase_price" valueNumeric="33000.00"/>
+            <column name="warranty_start_date" valueDate="2025-10-20"/>
+            <column name="warranty_end_date" valueDate="2027-04-20"/>
+            <column name="warranty_type" value="OEM"/>
+            <column name="depreciation_method" value="WDV"/>
+            <column name="useful_life_years" valueNumeric="6"/>
+            <column name="asset_status" value="STOCK"/>
+            <column name="location_type" value="STOCK"/>
+            <column name="location_code" value="WH-MUM-CENTRAL"/>
+            <column name="created_by" value="system"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_by" value="system"/>
+            <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="seed-12-more_associations" author="assetiq-seed" context="demo">
+        <insert tableName="aiq_asset_association">
+            <column name="id" valueNumeric="900004004"/>
+            <column name="tenant_id" value="coca-cola"/>
+            <column name="asset_id" valueNumeric="900003004"/>
+            <column name="asset_number" value="AST-CC-0004"/>
+            <column name="location_type" value="OUTLET"/>
+            <column name="location_code" value="OUT-JAYANAGAR"/>
+            <column name="location_name" value="Jayanagar Outlet"/>
+            <column name="territory_code" value="TER-BLR-01"/>
+            <column name="salesman_code" value="SM-1001"/>
+            <column name="assignment_date" valueDate="2025-05-22"/>
+            <column name="created_by" value="system"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+        <insert tableName="aiq_asset_association">
+            <column name="id" valueNumeric="900004005"/>
+            <column name="tenant_id" value="coca-cola"/>
+            <column name="asset_id" valueNumeric="900003005"/>
+            <column name="asset_number" value="AST-CC-0005"/>
+            <column name="location_type" value="OUTLET"/>
+            <column name="location_code" value="OUT-JAYANAGAR"/>
+            <column name="location_name" value="Jayanagar Outlet"/>
+            <column name="territory_code" value="TER-BLR-01"/>
+            <column name="salesman_code" value="SM-1001"/>
+            <column name="assignment_date" valueDate="2025-05-22"/>
+            <column name="created_by" value="system"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+        <insert tableName="aiq_asset_association">
+            <column name="id" valueNumeric="900004006"/>
+            <column name="tenant_id" value="coca-cola"/>
+            <column name="asset_id" valueNumeric="900003006"/>
+            <column name="asset_number" value="AST-CC-0006"/>
+            <column name="location_type" value="OUTLET"/>
+            <column name="location_code" value="OUT-BANDRA"/>
+            <column name="location_name" value="Bandra Outlet"/>
+            <column name="territory_code" value="TER-MUM-01"/>
+            <column name="salesman_code" value="SM-2001"/>
+            <column name="assignment_date" valueDate="2025-07-03"/>
+            <column name="has_contract" valueBoolean="true"/>
+            <column name="contract_ref" value="CTR-CC-003"/>
+            <column name="deposit_amount" valueNumeric="6000.00"/>
+            <column name="deposit_status" value="PAID"/>
+            <column name="purity_clause_pct" valueNumeric="95.00"/>
+            <column name="contract_start_date" valueDate="2025-07-03"/>
+            <column name="contract_end_date" valueDate="2027-07-03"/>
+            <column name="created_by" value="system"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+        <insert tableName="aiq_asset_association">
+            <column name="id" valueNumeric="900004007"/>
+            <column name="tenant_id" value="coca-cola"/>
+            <column name="asset_id" valueNumeric="900003007"/>
+            <column name="asset_number" value="AST-CC-0007"/>
+            <column name="location_type" value="OUTLET"/>
+            <column name="location_code" value="OUT-BANDRA"/>
+            <column name="location_name" value="Bandra Outlet"/>
+            <column name="territory_code" value="TER-MUM-01"/>
+            <column name="salesman_code" value="SM-2001"/>
+            <column name="assignment_date" valueDate="2025-07-03"/>
+            <column name="created_by" value="system"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+        <insert tableName="aiq_asset_association">
+            <column name="id" valueNumeric="900004008"/>
+            <column name="tenant_id" value="coca-cola"/>
+            <column name="asset_id" valueNumeric="900003008"/>
+            <column name="asset_number" value="AST-CC-0008"/>
+            <column name="location_type" value="OUTLET"/>
+            <column name="location_code" value="OUT-ANDHERI"/>
+            <column name="location_name" value="Andheri Outlet"/>
+            <column name="territory_code" value="TER-MUM-01"/>
+            <column name="salesman_code" value="SM-2002"/>
+            <column name="assignment_date" valueDate="2025-08-17"/>
+            <column name="created_by" value="system"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+        <insert tableName="aiq_asset_association">
+            <column name="id" valueNumeric="900004009"/>
+            <column name="tenant_id" value="coca-cola"/>
+            <column name="asset_id" valueNumeric="900003009"/>
+            <column name="asset_number" value="AST-CC-0009"/>
+            <column name="location_type" value="OUTLET"/>
+            <column name="location_code" value="OUT-CP"/>
+            <column name="location_name" value="Connaught Place Outlet"/>
+            <column name="territory_code" value="TER-DEL-01"/>
+            <column name="salesman_code" value="SM-3001"/>
+            <column name="assignment_date" valueDate="2025-09-12"/>
+            <column name="has_contract" valueBoolean="true"/>
+            <column name="contract_ref" value="CTR-CC-004"/>
+            <column name="deposit_amount" valueNumeric="5500.00"/>
+            <column name="deposit_status" value="PAID"/>
+            <column name="purity_clause_pct" valueNumeric="95.00"/>
+            <column name="contract_start_date" valueDate="2025-09-12"/>
+            <column name="contract_end_date" valueDate="2027-09-12"/>
+            <column name="created_by" value="system"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+        <insert tableName="aiq_asset_association">
+            <column name="id" valueNumeric="900004010"/>
+            <column name="tenant_id" value="coca-cola"/>
+            <column name="asset_id" valueNumeric="900003010"/>
+            <column name="asset_number" value="AST-CC-0010"/>
+            <column name="location_type" value="OUTLET"/>
+            <column name="location_code" value="OUT-CP"/>
+            <column name="location_name" value="Connaught Place Outlet"/>
+            <column name="territory_code" value="TER-DEL-01"/>
+            <column name="salesman_code" value="SM-3001"/>
+            <column name="assignment_date" valueDate="2025-09-12"/>
+            <column name="created_by" value="system"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+        <insert tableName="aiq_asset_association">
+            <column name="id" valueNumeric="900004011"/>
+            <column name="tenant_id" value="coca-cola"/>
+            <column name="asset_id" valueNumeric="900003011"/>
+            <column name="asset_number" value="AST-CC-0011"/>
+            <column name="location_type" value="OUTLET"/>
+            <column name="location_code" value="OUT-SAKET"/>
+            <column name="location_name" value="Saket Outlet"/>
+            <column name="territory_code" value="TER-DEL-01"/>
+            <column name="salesman_code" value="SM-3002"/>
+            <column name="assignment_date" valueDate="2025-10-07"/>
+            <column name="created_by" value="system"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="seed-13-more_movement_log" author="assetiq-seed" context="demo">
+        <insert tableName="aiq_asset_movement_log">
+            <column name="id" valueNumeric="900005005"/>
+            <column name="tenant_id" value="coca-cola"/>
+            <column name="asset_id" valueNumeric="900003004"/>
+            <column name="asset_number" value="AST-CC-0004"/>
+            <column name="movement_type" value="ASSIGN"/>
+            <column name="to_location_type" value="OUTLET"/>
+            <column name="to_location_code" value="OUT-JAYANAGAR"/>
+            <column name="moved_by_user_code" value="SM-1001"/>
+            <column name="reason" value="Initial deployment"/>
+            <column name="gps_lat" valueNumeric="12.93080000"/>
+            <column name="gps_lng" valueNumeric="77.58380000"/>
+            <column name="moved_at" valueDate="2025-05-22T10:00:00"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+        <insert tableName="aiq_asset_movement_log">
+            <column name="id" valueNumeric="900005006"/>
+            <column name="tenant_id" value="coca-cola"/>
+            <column name="asset_id" valueNumeric="900003005"/>
+            <column name="asset_number" value="AST-CC-0005"/>
+            <column name="movement_type" value="ASSIGN"/>
+            <column name="to_location_type" value="OUTLET"/>
+            <column name="to_location_code" value="OUT-JAYANAGAR"/>
+            <column name="moved_by_user_code" value="SM-1001"/>
+            <column name="reason" value="Initial deployment"/>
+            <column name="gps_lat" valueNumeric="12.93080000"/>
+            <column name="gps_lng" valueNumeric="77.58380000"/>
+            <column name="moved_at" valueDate="2025-05-22T10:15:00"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+        <insert tableName="aiq_asset_movement_log">
+            <column name="id" valueNumeric="900005007"/>
+            <column name="tenant_id" value="coca-cola"/>
+            <column name="asset_id" valueNumeric="900003006"/>
+            <column name="asset_number" value="AST-CC-0006"/>
+            <column name="movement_type" value="ASSIGN"/>
+            <column name="to_location_type" value="OUTLET"/>
+            <column name="to_location_code" value="OUT-BANDRA"/>
+            <column name="moved_by_user_code" value="SM-2001"/>
+            <column name="reason" value="Initial deployment"/>
+            <column name="gps_lat" valueNumeric="19.05960000"/>
+            <column name="gps_lng" valueNumeric="72.82950000"/>
+            <column name="moved_at" valueDate="2025-07-03T09:30:00"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+        <insert tableName="aiq_asset_movement_log">
+            <column name="id" valueNumeric="900005008"/>
+            <column name="tenant_id" value="coca-cola"/>
+            <column name="asset_id" valueNumeric="900003007"/>
+            <column name="asset_number" value="AST-CC-0007"/>
+            <column name="movement_type" value="ASSIGN"/>
+            <column name="to_location_type" value="OUTLET"/>
+            <column name="to_location_code" value="OUT-BANDRA"/>
+            <column name="moved_by_user_code" value="SM-2001"/>
+            <column name="reason" value="Initial deployment"/>
+            <column name="gps_lat" valueNumeric="19.05960000"/>
+            <column name="gps_lng" valueNumeric="72.82950000"/>
+            <column name="moved_at" valueDate="2025-07-03T09:45:00"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+        <insert tableName="aiq_asset_movement_log">
+            <column name="id" valueNumeric="900005009"/>
+            <column name="tenant_id" value="coca-cola"/>
+            <column name="asset_id" valueNumeric="900003008"/>
+            <column name="asset_number" value="AST-CC-0008"/>
+            <column name="movement_type" value="ASSIGN"/>
+            <column name="to_location_type" value="OUTLET"/>
+            <column name="to_location_code" value="OUT-ANDHERI"/>
+            <column name="moved_by_user_code" value="SM-2002"/>
+            <column name="reason" value="Initial deployment"/>
+            <column name="gps_lat" valueNumeric="19.11360000"/>
+            <column name="gps_lng" valueNumeric="72.86970000"/>
+            <column name="moved_at" valueDate="2025-08-17T11:00:00"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+        <insert tableName="aiq_asset_movement_log">
+            <column name="id" valueNumeric="900005010"/>
+            <column name="tenant_id" value="coca-cola"/>
+            <column name="asset_id" valueNumeric="900003009"/>
+            <column name="asset_number" value="AST-CC-0009"/>
+            <column name="movement_type" value="ASSIGN"/>
+            <column name="to_location_type" value="OUTLET"/>
+            <column name="to_location_code" value="OUT-CP"/>
+            <column name="moved_by_user_code" value="SM-3001"/>
+            <column name="reason" value="Initial deployment"/>
+            <column name="gps_lat" valueNumeric="28.63150000"/>
+            <column name="gps_lng" valueNumeric="77.21670000"/>
+            <column name="moved_at" valueDate="2025-09-12T10:00:00"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+        <insert tableName="aiq_asset_movement_log">
+            <column name="id" valueNumeric="900005011"/>
+            <column name="tenant_id" value="coca-cola"/>
+            <column name="asset_id" valueNumeric="900003010"/>
+            <column name="asset_number" value="AST-CC-0010"/>
+            <column name="movement_type" value="ASSIGN"/>
+            <column name="to_location_type" value="OUTLET"/>
+            <column name="to_location_code" value="OUT-CP"/>
+            <column name="moved_by_user_code" value="SM-3001"/>
+            <column name="reason" value="Initial deployment"/>
+            <column name="gps_lat" valueNumeric="28.63150000"/>
+            <column name="gps_lng" valueNumeric="77.21670000"/>
+            <column name="moved_at" valueDate="2025-09-12T10:15:00"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+        <insert tableName="aiq_asset_movement_log">
+            <column name="id" valueNumeric="900005012"/>
+            <column name="tenant_id" value="coca-cola"/>
+            <column name="asset_id" valueNumeric="900003011"/>
+            <column name="asset_number" value="AST-CC-0011"/>
+            <column name="movement_type" value="ASSIGN"/>
+            <column name="to_location_type" value="OUTLET"/>
+            <column name="to_location_code" value="OUT-SAKET"/>
+            <column name="moved_by_user_code" value="SM-3002"/>
+            <column name="reason" value="Initial deployment"/>
+            <column name="gps_lat" valueNumeric="28.52450000"/>
+            <column name="gps_lng" valueNumeric="77.20660000"/>
+            <column name="moved_at" valueDate="2025-10-07T09:00:00"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+        <insert tableName="aiq_asset_movement_log">
+            <column name="id" valueNumeric="900005013"/>
+            <column name="tenant_id" value="coca-cola"/>
+            <column name="asset_id" valueNumeric="900003012"/>
+            <column name="asset_number" value="AST-CC-0012"/>
+            <column name="movement_type" value="ASSIGN"/>
+            <column name="to_location_type" value="STOCK"/>
+            <column name="to_location_code" value="WH-MUM-CENTRAL"/>
+            <column name="moved_by_user_code" value="wh-user-2"/>
+            <column name="reason" value="Received into central stock"/>
+            <column name="moved_at" valueDate="2025-10-20T14:00:00"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+    </changeSet>
+
 </databaseChangeLog>

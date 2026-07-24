@@ -145,8 +145,6 @@ public class AssetDeploymentService {
                 .orElseThrow(() -> new ConflictException(
                         "Asset " + asset.getAssetNumber() + " has no current active association to transfer from"));
 
-        assetMovementValidator.validateTransferFromOutletAllowed(tenantId, asset, current);
-
         current.setIsActive(false);
         assetAssociationRepository.save(current);
 

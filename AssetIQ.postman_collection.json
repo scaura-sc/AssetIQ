@@ -1,0 +1,317 @@
+{
+  "info": {
+    "name": "AssetIQ Backend API",
+    "description": "REST API for the AssetIQ backend. Every request needs X-Tenant-Id (set at collection level). See API_DOCUMENTATION.md for full field reference.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8081" },
+    { "key": "tenantId", "value": "coca-cola" }
+  ],
+  "auth": null,
+  "header": [
+    { "key": "X-Tenant-Id", "value": "{{tenantId}}" }
+  ],
+  "item": [
+    {
+      "name": "Asset Catalog",
+      "item": [
+        {
+          "name": "Create catalog entry",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/asset-catalog",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"level\": \"MODEL\",\n  \"code\": \"VC-300L\",\n  \"name\": \"VisiCooler 300L\",\n  \"parentCode\": \"VISI_COOLER\",\n  \"manufacturerName\": \"Western Refrigeration Pvt Ltd\",\n  \"manufacturerCountry\": \"India\",\n  \"defaultWarrantyMonths\": 24,\n  \"defaultUsefulLifeYears\": 8,\n  \"defaultDepreciationMethod\": \"SLM\",\n  \"defaultPmFrequencyDays\": 90,\n  \"defaultPurityClausePct\": 95.00,\n  \"capacity\": 300.00,\n  \"capacityUnit\": \"Litres\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update catalog entry",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/asset-catalog/900001003",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"VisiCooler 300L (rev)\",\n  \"defaultWarrantyMonths\": 24\n}"
+            }
+          }
+        },
+        {
+          "name": "Get catalog entry",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/asset-catalog/900001003" }
+        },
+        {
+          "name": "List by level",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/asset-catalog?level=CATEGORY" }
+        },
+        {
+          "name": "List children of a code",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/asset-catalog/children?parentCode=COOLER" }
+        },
+        {
+          "name": "List available models",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/asset-catalog/models/available" }
+        },
+        {
+          "name": "Deactivate catalog entry",
+          "request": { "method": "DELETE", "url": "{{baseUrl}}/api/asset-catalog/900001003" }
+        }
+      ]
+    },
+    {
+      "name": "Vendors",
+      "item": [
+        {
+          "name": "Create vendor",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/vendors",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vendorCode\": \"V-003\",\n  \"vendorName\": \"New Vendor Pvt Ltd\",\n  \"vendorType\": \"SUPPLIER\",\n  \"gstNumber\": \"27ABCDE1234F1Z5\",\n  \"contactEmail\": \"sales@newvendor.example\",\n  \"contactPhone\": \"+91-9000010003\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get vendor",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/vendors/900002001" }
+        },
+        {
+          "name": "List active vendors",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/vendors" }
+        },
+        {
+          "name": "Deactivate vendor",
+          "request": { "method": "DELETE", "url": "{{baseUrl}}/api/vendors/900002001" }
+        }
+      ]
+    },
+    {
+      "name": "Assets",
+      "item": [
+        {
+          "name": "Register asset",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/assets",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"serialNumber\": \"SN-CC-9001\",\n  \"assetName\": \"VisiCooler 300L - New Unit\",\n  \"categoryCode\": \"COOLER\",\n  \"typeCode\": \"VISI_COOLER\",\n  \"modelCode\": \"VC-300L\",\n  \"vendorCode\": \"V-001\",\n  \"capacity\": 300.00,\n  \"capacityUnit\": \"Litres\",\n  \"colour\": \"Red\",\n  \"purchaseDate\": \"2026-07-27\",\n  \"purchasePrice\": 47000.00,\n  \"warrantyStartDate\": \"2026-07-27\",\n  \"warrantyEndDate\": \"2028-07-27\",\n  \"warrantyType\": \"OEM\",\n  \"depreciationMethod\": \"SLM\",\n  \"usefulLifeYears\": 8,\n  \"createdBy\": \"system\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get asset",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/assets/900003002" }
+        },
+        {
+          "name": "List all assets",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/assets" }
+        },
+        {
+          "name": "Deploy asset to outlet",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/assets/900003004/deploy",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"outletCode\": \"OUT-JAYANAGAR\",\n  \"outletName\": \"Jayanagar Outlet\",\n  \"territoryCode\": \"TER-BLR-01\",\n  \"salesmanCode\": \"SM-1001\",\n  \"assignmentDate\": \"2026-07-27\",\n  \"assignmentType\": \"PERMANENT\",\n  \"hasContract\": false,\n  \"exclusivityFlag\": false,\n  \"movedByUserCode\": \"SM-1001\",\n  \"reason\": \"Initial deployment\",\n  \"gpsLat\": 12.9308,\n  \"gpsLng\": 77.5838\n}"
+            }
+          }
+        },
+        {
+          "name": "Transfer asset",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/assets/900003003/transfer",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"toLocationType\": \"WAREHOUSE\",\n  \"toLocationCode\": \"WH-BLR-CENTRAL\",\n  \"targetAssetStatus\": \"STOCK\",\n  \"assignmentDate\": \"2026-07-27\",\n  \"movedByUserCode\": \"SM-1001\",\n  \"reason\": \"Outlet closure\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Swap assets",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/assets/swap",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"oldAssetId\": \"900003001\",\n  \"newAssetId\": \"900003003\",\n  \"movedByUserCode\": \"SM-1001\",\n  \"reason\": \"Cooling issue - unit replaced\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get current association",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/assets/900003002/associations/current" }
+        },
+        {
+          "name": "List association history",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/assets/900003002/associations" }
+        },
+        {
+          "name": "List movement history",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/assets/900003002/movements" }
+        }
+      ]
+    },
+    {
+      "name": "Visit Captures",
+      "item": [
+        {
+          "name": "Create capture (manual purity)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/visit-captures",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"visitId\": \"VISIT-CC-0020\",\n  \"visitDate\": \"2026-07-27\",\n  \"outletCode\": \"OUT-INDIRANAGAR\",\n  \"territoryCode\": \"TER-BLR-01\",\n  \"salesmanCode\": \"SM-1002\",\n  \"assetId\": \"900003002\",\n  \"roleCode\": \"SALESMAN\",\n  \"isPlannedVisit\": true,\n  \"presenceStatus\": \"PRESENT\",\n  \"scanMethod\": \"QR\",\n  \"scanValue\": \"QR-AST-CC-0002\",\n  \"purityRawScore\": 4,\n  \"conditionGrade\": \"GOOD\",\n  \"workingStatus\": \"WORKING\",\n  \"competitorPresent\": false,\n  \"brandingStatus\": \"INTACT\",\n  \"gpsLat\": 12.9719,\n  \"gpsLng\": 77.6412,\n  \"gpsAccuracyM\": 6.5,\n  \"capturedOffline\": false,\n  \"capturedAt\": \"2026-07-27T11:15:00\",\n  \"notes\": \"Routine PJP visit\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Create capture (AI Vision purity)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/visit-captures",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"visitId\": \"VISIT-CC-0021\",\n  \"visitDate\": \"2026-07-27\",\n  \"outletCode\": \"OUT-INDIRANAGAR\",\n  \"territoryCode\": \"TER-BLR-01\",\n  \"salesmanCode\": \"SM-1002\",\n  \"assetId\": \"900003002\",\n  \"roleCode\": \"SALESMAN\",\n  \"isPlannedVisit\": true,\n  \"presenceStatus\": \"PRESENT\",\n  \"scanMethod\": \"QR\",\n  \"purityPct\": 96.5,\n  \"purityAiConfidence\": 91.0,\n  \"conditionGrade\": \"GOOD\",\n  \"workingStatus\": \"WORKING\",\n  \"brandingStatus\": \"INTACT\",\n  \"photoUrl1\": \"https://cdn.example.com/visits/0021/photo1.jpg\",\n  \"capturedAt\": \"2026-07-27T11:20:00\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get capture",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/visit-captures/900006001" }
+        },
+        {
+          "name": "List captures by asset",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/visit-captures?assetId=900003002" }
+        }
+      ]
+    },
+    {
+      "name": "Service Events",
+      "item": [
+        {
+          "name": "Create complaint",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/service-events/complaints",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"assetId\": \"900003002\",\n  \"outletCode\": \"OUT-INDIRANAGAR\",\n  \"priority\": \"HIGH\",\n  \"description\": \"Cooler not maintaining temperature\",\n  \"raisedByUserCode\": \"SM-1002\",\n  \"complaintType\": \"COOLING_ISSUE\",\n  \"raisedAt\": \"2026-07-27T10:05:00\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Create work order",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/service-events/work-orders",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"assetId\": \"900003002\",\n  \"outletCode\": \"OUT-INDIRANAGAR\",\n  \"priority\": \"HIGH\",\n  \"raisedByUserCode\": \"system\",\n  \"assignedToUserCode\": \"tech-2001\",\n  \"woType\": \"CORRECTIVE\",\n  \"triggeredBy\": \"COMPLAINT\",\n  \"plannedDate\": \"2026-07-29\",\n  \"labourCost\": 500.00,\n  \"partsCost\": 300.00,\n  \"raisedAt\": \"2026-07-27T10:10:00\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Create preventive maintenance",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/service-events/work-orders/preventive-maintenance",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"assetId\": \"900003002\",\n  \"outletCode\": \"OUT-INDIRANAGAR\",\n  \"priority\": \"LOW\",\n  \"raisedByUserCode\": \"system\",\n  \"assignedToUserCode\": \"tech-2001\",\n  \"plannedDate\": \"2026-08-01\",\n  \"raisedAt\": \"2026-07-27T09:00:00\"\n}"
+            }
+          }
+        },
+        {
+          "name": "List overdue PM work orders",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/service-events/work-orders/overdue" }
+        },
+        {
+          "name": "Update status",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/service-events/900007002/status",
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"IN_PROGRESS\"\n}" }
+          }
+        },
+        {
+          "name": "Assign technician",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/service-events/900007002/assign",
+            "body": { "mode": "raw", "raw": "{\n  \"assignedToUserCode\": \"tech-2001\"\n}" }
+          }
+        },
+        {
+          "name": "Close work order",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/service-events/900007002/close",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"photoAfterUrl\": \"https://cdn.example.com/wo/0001/after.jpg\",\n  \"signatureUrl\": \"https://cdn.example.com/wo/0001/signature.png\",\n  \"resolutionNotes\": \"Replaced compressor\",\n  \"labourCost\": 500.00,\n  \"partsCost\": 300.00\n}"
+            }
+          }
+        },
+        {
+          "name": "Search / dashboard",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/service-events/search?priority=HIGH&status=OPEN" }
+        },
+        {
+          "name": "MTTR by complaint type",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/service-events/mttr" }
+        },
+        {
+          "name": "Get event",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/service-events/900007002" }
+        },
+        {
+          "name": "List events by asset",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/service-events?assetId=900003002" }
+        }
+      ]
+    },
+    {
+      "name": "Scoring Config (AHS weightage)",
+      "item": [
+        {
+          "name": "Get current weights",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/scoring-config" }
+        },
+        {
+          "name": "Set weights",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/scoring-config",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"presenceWeightPct\": 20.00,\n  \"purityWeightPct\": 35.00,\n  \"conditionWeightPct\": 30.00,\n  \"uptimeWeightPct\": 15.00\n}"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

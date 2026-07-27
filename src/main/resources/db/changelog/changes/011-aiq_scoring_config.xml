@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd">
+
+    <changeSet id="011-1-create-aiq_scoring_config" author="assetiq">
+        <createTable tableName="aiq_scoring_config">
+            <!-- Application-generated Snowflake id — no autoIncrement, see SnowflakeIdGenerator -->
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="tenant_id" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="presence_weight_pct" type="DECIMAL(5,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="purity_weight_pct" type="DECIMAL(5,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="condition_weight_pct" type="DECIMAL(5,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="uptime_weight_pct" type="DECIMAL(5,2)">
+                <constraints nullable="false"/>
+            </column>
+            <!-- No foreign keys: this table has none, and no other table may
+                 declare a DB-level FK onto it either — it's read by tenant_id
+                 only, validated in the service layer. -->
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="011-2-index-aiq_scoring_config" author="assetiq">
+        <createIndex tableName="aiq_scoring_config" indexName="ux_scoring_config_tenant" unique="true">
+            <column name="tenant_id"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

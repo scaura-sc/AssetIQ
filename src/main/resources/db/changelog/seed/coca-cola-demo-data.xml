@@ -1190,4 +1190,19 @@
         </insert>
     </changeSet>
 
+    <changeSet id="seed-14-aiq_scoring_config" author="assetiq-seed" context="demo">
+        <!-- Deliberately not an even 25/25/25/25 split, so the AHS math visibly
+             differs from the service-layer default fallback. -->
+        <insert tableName="aiq_scoring_config">
+            <column name="id" valueNumeric="900010001"/>
+            <column name="tenant_id" value="coca-cola"/>
+            <column name="presence_weight_pct" valueNumeric="20.00"/>
+            <column name="purity_weight_pct" valueNumeric="35.00"/>
+            <column name="condition_weight_pct" valueNumeric="30.00"/>
+            <column name="uptime_weight_pct" valueNumeric="15.00"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+    </changeSet>
+
 </databaseChangeLog>

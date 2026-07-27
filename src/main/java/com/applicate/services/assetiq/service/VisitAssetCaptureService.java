@@ -27,13 +27,16 @@ public class VisitAssetCaptureService {
     private final VisitAssetCaptureRepository visitAssetCaptureRepository;
     private final AssetRepository assetRepository;
     private final ReferenceValidationService referenceValidationService;
+    private final AhsCalculationService ahsCalculationService;
 
     public VisitAssetCaptureService(VisitAssetCaptureRepository visitAssetCaptureRepository,
                                      AssetRepository assetRepository,
-                                     ReferenceValidationService referenceValidationService) {
+                                     ReferenceValidationService referenceValidationService,
+                                     AhsCalculationService ahsCalculationService) {
         this.visitAssetCaptureRepository = visitAssetCaptureRepository;
         this.assetRepository = assetRepository;
         this.referenceValidationService = referenceValidationService;
+        this.ahsCalculationService = ahsCalculationService;
     }
 
     public VisitCaptureResponse create(VisitCaptureCreateRequest request) {
@@ -96,8 +99,11 @@ public class VisitAssetCaptureService {
         if (Boolean.TRUE.equals(role.getAssetCaptureEligible())) {
             asset.setLastVisitDate(request.visitDate());
             asset.setLastVisitId(request.visitId());
-            assetRepository.save(asset);
         }
+        // AHS recalculates on every capture, regardless of role eligibility — that gate is
+        // specifically about official PJP last-visit tracking, a separate concern.
+        ahsCalculationService.recalculate(asset, capture);
+        assetRepository.save(asset);
 
         return VisitCaptureResponse.from(capture);
     }

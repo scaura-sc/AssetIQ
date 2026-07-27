@@ -2,8 +2,8 @@
 
 For UI integration against the local backend.
 
-- **Base URL (same machine):** `http://localhost:8080`
-- **Base URL (LAN):** `http://192.168.0.100:8080` *(DHCP-assigned — re-check with `ipconfig getifaddr en0` if it stops working)*
+- **Base URL (same machine):** `http://localhost:8081`
+- **Base URL (LAN):** `http://192.168.0.100:8081` *(DHCP-assigned — re-check with `ipconfig getifaddr en0` if it stops working; port is 8081, not 8080 — 8080 is used by another local project on this machine)*
 - **Demo tenant:** `coca-cola`
 
 ---
@@ -466,7 +466,51 @@ Required: `photoAfterUrl`, `signatureUrl` (both mandatory to close). `labourCost
 
 ---
 
-## 8. Quick reference table
+## 8. Scoring Config & AHS (Asset Health Score) — `/api/scoring-config`
+
+Every asset carries an **AHS** (`ahsScore` on `AssetResponse`, 0-100) computed from 4 weighted components — **Presence, Purity, Condition, Uptime** — every time a visit capture is submitted. `/api/scoring-config` lets each tenant configure how much each component counts.
+
+| Method | Path | Purpose |
+|---|---|---|
+| `GET` | `/api/scoring-config` | Get the tenant's current weights (or the 25/25/25/25 default if never configured) |
+| `PUT` | `/api/scoring-config` | Set the tenant's weights |
+
+**Body / response (`ScoringConfigRequest` / `ScoringConfigResponse`):**
+```json
+{
+  "presenceWeightPct": 20.00,
+  "purityWeightPct": 35.00,
+  "conditionWeightPct": 30.00,
+  "uptimeWeightPct": 15.00
+}
+```
+The 4 weights **must sum to exactly 100** and each be ≥ 0, or `PUT` returns `400`. The `coca-cola` demo tenant is pre-seeded with `20/35/30/15` (not the default split), so you can see configured weights actually changing the math.
+
+### How the score is computed (on every `POST /api/visit-captures`)
+
+Each of the 4 components maps a signal from that specific capture onto a 0-100 scale:
+
+| Component | Source field on the capture | Mapping |
+|---|---|---|
+| Presence | `presenceStatus` (always present — required field) | `PRESENT`=100, `PARTIAL`=50, `NOT_FOUND`=0 |
+| Purity | `purityPct` | used directly (already 0-100) |
+| Condition | `conditionGrade` | `EXCELLENT`=100, `GOOD`=75, `FAIR`=50, `POOR`=25, `SCRAP`=0 |
+| Uptime | `workingStatus` | `WORKING`=100, `PARTIAL`=50, `NOT_WORKING`=0 |
+
+```
+ahsScore = (presenceScore·presenceWeight + purityScore·purityWeight
+            + conditionScore·conditionWeight + uptimeScore·uptimeWeight) / 100
+```
+
+**Important — a signal this capture didn't report scores 0 for that component, by design.** Purity/condition/uptime are optional per capture (presence is required on every capture); if one is omitted, it does **not** carry forward the asset's last known value and does **not** get re-normalized out of the average — it counts as 0 and pulls `ahsScore` down. This is intentional: an incomplete capture should visibly lower the score rather than silently coast on stale data.
+
+`GET /api/assets/{id}` also returns `ahsPresenceScore`, `ahsPurityScore`, `ahsConditionScore`, `ahsUptimeScore` (the exact per-component values that fed the last calculation — so `ahsScore` always reconciles against them), `ahsConfidenceLevel` (`HIGH` = all 4 components captured this visit, `MEDIUM` = 3 of 4, `LOW` = ≤2 of 4), and `ahsCalculatedAt` (timestamp of the last capture that recalculated it).
+
+**Not yet implemented:** `ahsStaleFlag`/`ahsStaleSince` (would need a scheduled job to age scores down over time when an asset hasn't been visited recently — there's no scheduler in this backend yet) and `ahsPlFactor` (undefined P&L multiplier, untouched by this engine). Uptime is sourced from the field rep's `workingStatus` observation, not live IoT telemetry — `aiq_iot_telemetry_log` exists in the schema but has no service/API layer yet.
+
+---
+
+## 9. Quick reference table
 
 | Resource | Base path |
 |---|---|
@@ -475,5 +519,6 @@ Required: `photoAfterUrl`, `signatureUrl` (both mandatory to close). `labourCost
 | Assets (registration, deploy, transfer, swap, history) | `/api/assets` |
 | Visit Captures | `/api/visit-captures` |
 | Service Events (complaints, work orders) | `/api/service-events` |
+| Scoring Config (AHS weightage) | `/api/scoring-config` |
 
 Every call needs the `X-Tenant-Id: coca-cola` header. Every response ID is a JSON **string**, not a number.

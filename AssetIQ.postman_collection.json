@@ -59,6 +59,23 @@
         {
           "name": "Deactivate catalog entry",
           "request": { "method": "DELETE", "url": "{{baseUrl}}/api/asset-catalog/900001003" }
+        },
+        {
+          "name": "Download bulk-upload template",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/asset-catalog/bulk-upload/template" }
+        },
+        {
+          "name": "Bulk upload catalog sheet",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/asset-catalog/bulk-upload",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "file", "type": "file", "src": "" }
+              ]
+            }
+          }
         }
       ]
     },
@@ -161,6 +178,23 @@
         {
           "name": "List movement history",
           "request": { "method": "GET", "url": "{{baseUrl}}/api/assets/900003002/movements" }
+        },
+        {
+          "name": "Download bulk-upload template",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/assets/bulk-upload/template" }
+        },
+        {
+          "name": "Bulk upload assets sheet",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/assets/bulk-upload?createdBy=bulk-import",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "file", "type": "file", "src": "" }
+              ]
+            }
+          }
         }
       ]
     },

@@ -12,6 +12,13 @@ import java.time.LocalDate;
  * asset_number is server-generated (see BusinessCodeGenerator), never accepted
  * from the client. asset_status is always STOCK on creation — there is no
  * field for it here at all, by design.
+ *
+ * <p>{@code warehouseCode}/{@code territoryCode} are optional initial-placement
+ * fields: neither {@code deploy} (outlet-only) nor {@code transfer} (requires
+ * a pre-existing association to move from) can give a freshly-registered
+ * asset its first warehouse association, so registration itself carries this
+ * — if {@code warehouseCode} is given, the new asset is created already
+ * sitting in that warehouse instead of with no location at all.
  */
 public record AssetCreateRequest(
         @NotBlank String serialNumber,
@@ -40,6 +47,8 @@ public record AssetCreateRequest(
         DepreciationMethod depreciationMethod,
         Short usefulLifeYears,
         BigDecimal residualValue,
+        String warehouseCode,
+        String territoryCode,
         @NotBlank String createdBy
 ) {
 }

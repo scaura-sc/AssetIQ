@@ -202,11 +202,13 @@ Required: `vendorCode`, `vendorName`, `vendorType`.
   "depreciationMethod": "SLM",
   "usefulLifeYears": 8,
   "residualValue": null,
+  "warehouseCode": null,
+  "territoryCode": null,
   "createdBy": "system"
 }
 ```
 Required: `serialNumber`, `assetName`, `categoryCode`, `typeCode`, `modelCode`, `purchaseDate`, `purchasePrice`, `createdBy`.
-Notes: `assetNumber` is server-generated — **don't** send it. There is no field to set `assetStatus` on create — it's always `STOCK`.
+Notes: `assetNumber` is server-generated — **don't** send it. There is no field to set `assetStatus` on create — it's always `STOCK`. `warehouseCode`/`territoryCode` are optional — if `warehouseCode` is given, the new asset is created already sitting in that warehouse (`locationType: WAREHOUSE`) instead of with no location at all. This is the only way to give a brand-new asset an initial warehouse placement — neither `deploy` (outlet-only) nor `transfer` (requires an existing association to move *from*) can do it.
 
 **Response (`AssetResponse`)** — everything above plus deployment/AHS-scoring state: `assetStatus`, `workingStatus`, `conditionGrade`, `locationType`, `locationCode`, `territoryCode`, `salesmanCode`, `installationDate`, `lastVisitDate`, `lastVisitId`, `ahsScore`, `ahsPresenceScore`, `ahsPurityScore`, `ahsConditionScore`, `ahsUptimeScore`, `ahsPlFactor`, `ahsConfidenceLevel`, `ahsCalculatedAt`, `ahsStaleFlag`, `ahsStaleSince`, `primaryPhotoUrl`, `documentRefs`, `id`, `tenantId`, `createdAt`, `updatedBy`, `updatedAt`, `isActive`.
 
@@ -542,7 +544,93 @@ Both fields required. Same "already APPROVED/REJECTED" `409` guard as approve.
 
 ---
 
-## 9. Scoring Config & AHS (Asset Health Score) — `/api/scoring-config`
+## 9. Master Data Bulk Upload — Excel
+
+Two master-data sets support bulk upload via an `.xlsx` file instead of one-at-a-time API calls: **Asset Catalog** (Category/Type/Model) and **Assets** (bulk stock registration). Both follow the same shape:
+
+| Method | Path | Purpose |
+|---|---|---|
+| `POST` | `/api/asset-catalog/bulk-upload` | Upload a catalog sheet |
+| `GET` | `/api/asset-catalog/bulk-upload/template` | Download an empty `.xlsx` with the correct headers |
+| `POST` | `/api/assets/bulk-upload` | Upload an assets sheet |
+| `GET` | `/api/assets/bulk-upload/template` | Download an empty `.xlsx` with the correct headers |
+
+**Request:** `multipart/form-data`, file field named `file`. `POST /api/assets/bulk-upload` additionally takes a `createdBy` query/form parameter (one value for the whole upload — who performed it — not a column in the sheet).
+
+**Response (`BulkUploadResult`)** — always `200`, whether every row succeeded or some failed:
+```json
+{
+  "totalRows": 4,
+  "successCount": 3,
+  "failureCount": 1,
+  "errors": [
+    { "rowNumber": 5, "message": "No CATEGORY catalog entry with code 'NONEXISTENT-CAT'" }
+  ]
+}
+```
+`rowNumber` is 1-based counting the header row (row 1), matching what you'd see on-screen in the spreadsheet — the first data row is row 2. **A single bad row never aborts the batch** — every other row is still created, and the bad one is reported by row number with the same error message the single-row API would have given. Only a genuinely unreadable file (not a valid `.xlsx`, or an empty/missing header row) returns `400` instead.
+
+### 9.1 Asset Catalog sheet — columns
+
+| Column | Required | Notes |
+|---|---|---|
+| `level` | Yes | `CATEGORY` / `TYPE` / `MODEL` |
+| `code` | Yes | |
+| `name` | Yes | |
+| `parentCode` | For TYPE/MODEL | a CATEGORY code for TYPE rows, a TYPE code for MODEL rows; leave blank for CATEGORY |
+| `description` | No | |
+| `manufacturerName` | No | |
+| `manufacturerCountry` | No | |
+| `manufacturerContactEmail` | No | |
+| `manufacturerContactPhone` | No | |
+| `defaultWarrantyMonths` | No | integer |
+| `defaultUsefulLifeYears` | No | integer |
+| `defaultDepreciationMethod` | No | `SLM` / `WDV` |
+| `defaultPmFrequencyDays` | No | integer |
+| `defaultPurityClausePct` | No | decimal |
+| `capacity` | No | decimal |
+| `capacityUnit` | No | |
+
+**You can list rows in any order** — CATEGORY, TYPE, and MODEL rows can be mixed in any sequence in the sheet; the server processes CATEGORY rows first, then TYPE, then MODEL, so a child row's `parentCode` always resolves regardless of where it appears in the file.
+
+### 9.2 Assets sheet — columns
+
+| Column | Required | Notes |
+|---|---|---|
+| `serialNumber` | Yes | |
+| `assetName` | Yes | |
+| `categoryCode` | Yes | must form a valid CATEGORY→TYPE→MODEL chain with the next two |
+| `typeCode` | Yes | |
+| `modelCode` | Yes | |
+| `vendorCode` | No | |
+| `brandCode` | No | |
+| `divisionCode` | No | |
+| `companyCode` | No | |
+| `capacity` | No | decimal |
+| `capacityUnit` | No | |
+| `colour` | No | |
+| `purchaseDate` | Yes | date |
+| `purchasePrice` | Yes | decimal |
+| `purchaseOrderRef` | No | |
+| `invoiceRef` | No | |
+| `manufacturingDate` | No | date |
+| `warrantyStartDate` | No | date |
+| `warrantyEndDate` | No | date |
+| `warrantyType` | No | `OEM` / `EXTENDED` / `AMC` / `NONE` |
+| `amcStartDate` | No | date |
+| `amcEndDate` | No | date |
+| `amcVendorCode` | No | |
+| `depreciationMethod` | No | `SLM` / `WDV` |
+| `usefulLifeYears` | No | integer |
+| `residualValue` | No | decimal |
+| `warehouseCode` | No | places the asset directly into this warehouse on creation |
+| `territoryCode` | No | pair with `warehouseCode` — needed for the asset to show up in a territory-scoped Asset Request's `available-stock` (see §8) |
+
+Every asset created this way is `assetStatus: STOCK`, `workingStatus: WORKING` — same defaults as `POST /api/assets`. Rows without `warehouseCode` are created with no location at all (plain unplaced stock).
+
+---
+
+## 10. Scoring Config & AHS (Asset Health Score) — `/api/scoring-config`
 
 Every asset carries an **AHS** (`ahsScore` on `AssetResponse`, 0-100) computed from 4 weighted components — **Presence, Purity, Condition, Uptime** — every time a visit capture is submitted. `/api/scoring-config` lets each tenant configure how much each component counts.
 
@@ -586,7 +674,7 @@ ahsScore = (presenceScore·presenceWeight + purityScore·purityWeight
 
 ---
 
-## 10. Quick reference table
+## 11. Quick reference table
 
 | Resource | Base path |
 |---|---|
@@ -596,6 +684,7 @@ ahsScore = (presenceScore·presenceWeight + purityScore·purityWeight
 | Visit Captures | `/api/visit-captures` |
 | Service Events (complaints, work orders) | `/api/service-events` |
 | Asset Requests (outlet request → approve from stock) | `/api/asset-requests` |
+| Bulk upload (catalog: `/api/asset-catalog/bulk-upload`, assets: `/api/assets/bulk-upload`) | see §9 |
 | Scoring Config (AHS weightage) | `/api/scoring-config` |
 
 Every call needs the `X-Tenant-Id: coca-cola` header. Every response ID is a JSON **string**, not a number.

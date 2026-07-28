@@ -5,6 +5,7 @@ import com.applicate.services.assetiq.dto.asset.AssetCreateRequest;
 import com.applicate.services.assetiq.dto.asset.AssetResponse;
 import com.applicate.services.assetiq.entity.AiqAsset;
 import com.applicate.services.assetiq.entity.enums.AssetStatus;
+import com.applicate.services.assetiq.entity.enums.LocationType;
 import com.applicate.services.assetiq.entity.enums.WorkingStatus;
 import com.applicate.services.assetiq.exception.BadRequestException;
 import com.applicate.services.assetiq.exception.NotFoundException;
@@ -84,6 +85,15 @@ public class AssetService {
         asset.setWorkingStatus(WorkingStatus.WORKING);
         asset.setCreatedBy(request.createdBy());
         asset.setUpdatedBy(request.createdBy());
+
+        // Optional initial warehouse placement — neither deploy (outlet-only) nor transfer
+        // (requires a pre-existing association to move from) can give a brand-new asset its
+        // first warehouse association, so registration itself carries this instead.
+        if (request.warehouseCode() != null) {
+            asset.setLocationType(LocationType.WAREHOUSE);
+            asset.setLocationCode(request.warehouseCode());
+            asset.setTerritoryCode(request.territoryCode());
+        }
 
         // TODO(QR/barcode generation): once aiq_qr_registry exists, generate and persist a QR/barcode
         // for this asset here, right after the initial save assigns its id/asset_number.

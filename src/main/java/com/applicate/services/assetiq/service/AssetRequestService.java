@@ -34,7 +34,9 @@ import java.util.List;
  * association at all, or an active association at a WAREHOUSE — that's the
  * normal resting state for inventory (assets don't just float with
  * assetStatus=STOCK and zero association; per this domain, they live in a
- * warehouse until deployed). Approval doesn't duplicate deploy/transfer logic:
+ * warehouse until deployed) — AND, if the request specifies a territoryCode,
+ * the asset's own territoryCode must match: a warehouse in another territory
+ * isn't a realistic option for this outlet. Approval doesn't duplicate deploy/transfer logic:
  * it picks whichever of AssetDeploymentService.deploy (no prior association)
  * or .transfer (an active warehouse association to move off of) applies, so
  * every precondition is enforced exactly once, not re-checked here.
@@ -103,6 +105,12 @@ public class AssetRequestService {
                 .filter(asset -> activeAssociationValidator.findActive(tenantId, asset.getId())
                         .map(assoc -> assoc.getLocationType() == LocationType.WAREHOUSE)
                         .orElse(true))
+                // Only stock actually sitting in the requesting outlet's own territory counts as
+                // available to it — a warehouse in a different territory isn't a same-day option.
+                // If the request itself has no territoryCode, this constraint is skipped rather
+                // than excluding everything.
+                .filter(asset -> assetRequest.getTerritoryCode() == null
+                        || assetRequest.getTerritoryCode().equals(asset.getTerritoryCode()))
                 .map(AssetResponse::from)
                 .toList();
     }

@@ -249,7 +249,14 @@ Notes: `assetNumber` is server-generated — **don't** send it. There is no fiel
   "gpsLng": 77.5838
 }
 ```
-Required: `outletCode`, `assignmentDate`, `movedByUserCode`. Only deploys `STOCK` assets — deploying an already-deployed asset is a `409`-type failure (use transfer/swap instead).
+Required: `outletCode`, `assignmentDate`, `movedByUserCode`.
+
+**Preconditions — violating any of these returns `409 Conflict`:**
+- The asset's `assetStatus` must be `STOCK` (deploying an already-deployed asset is rejected — use transfer/swap instead).
+- The asset's `workingStatus` must be `WORKING`. A freshly-registered asset has `workingStatus: null` (it's never been captured yet) and **cannot** be deployed until a visit capture sets it to `WORKING` — error: `"Asset {assetNumber} must be WORKING to deploy (is {workingStatus})"`.
+- The asset must **not** already have an active association — check `GET /api/assets/{id}/associations/current` returns `204` (not `200`) before deploying. Error if it does: `"Asset {id} already has an active association; deactivate it first"`.
+
+Practical flow for the UI: `GET /api/assets`, filter to `assetStatus: "STOCK"` and `workingStatus: "WORKING"`, then confirm `GET /api/assets/{id}/associations/current` is `204` before offering "deploy" for that asset.
 
 **Response (`DeployResponse`):** `{ "asset": AssetResponse, "association": AssociationResponse, "movementLog": MovementLogResponse }`
 

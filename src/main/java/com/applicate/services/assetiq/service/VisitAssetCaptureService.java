@@ -100,6 +100,12 @@ public class VisitAssetCaptureService {
             asset.setLastVisitDate(request.visitDate());
             asset.setLastVisitId(request.visitId());
         }
+        // The asset's own working_status only ever reflected asset-creation-time default
+        // (WORKING) until now — nothing synced it from the field's actual reported state.
+        // A capture is the ground truth for it, same as it already is for condition/AHS.
+        if (request.workingStatus() != null) {
+            asset.setWorkingStatus(request.workingStatus());
+        }
         // AHS recalculates on every capture, regardless of role eligibility — that gate is
         // specifically about official PJP last-visit tracking, a separate concern.
         ahsCalculationService.recalculate(asset, capture);

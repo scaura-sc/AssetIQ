@@ -293,6 +293,59 @@
       ]
     },
     {
+      "name": "Asset Requests",
+      "item": [
+        {
+          "name": "Create request (category + type only)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/asset-requests",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"outletCode\": \"OUT-JAYANAGAR\",\n  \"outletName\": \"Jayanagar Outlet\",\n  \"territoryCode\": \"TER-BLR-01\",\n  \"salesmanCode\": \"SM-1001\",\n  \"categoryCode\": \"FRIDGE\",\n  \"typeCode\": \"DEEP_FREEZER\",\n  \"reason\": \"Outlet needs a replacement freezer\",\n  \"requestedByUserCode\": \"SM-1001\",\n  \"requestedAt\": \"2026-07-28T11:00:00\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get request",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/asset-requests/207735735086743552" }
+        },
+        {
+          "name": "Search / list (portal dashboard)",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/asset-requests?status=PENDING" }
+        },
+        {
+          "name": "Available stock for a request",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/asset-requests/207735735086743552/available-stock" }
+        },
+        {
+          "name": "Approve (picks an asset, deploys it)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/asset-requests/207735735086743552/approve",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"assetId\": \"205668755760480256\",\n  \"approvedByUserCode\": \"portal-admin-1\",\n  \"reason\": \"Approved from stock\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Reject",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/asset-requests/207735735086743552/reject",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rejectedByUserCode\": \"portal-admin-1\",\n  \"rejectionReason\": \"No stock available for this type currently\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
       "name": "Scoring Config (AHS weightage)",
       "item": [
         {

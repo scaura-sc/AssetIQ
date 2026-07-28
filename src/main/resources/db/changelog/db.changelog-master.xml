@@ -27,6 +27,7 @@
     <include file="db/changelog/changes/009-aiq_iot_telemetry_log.xml" relativeToChangelogFile="false"/>
     <include file="db/changelog/changes/010-aiq_ai_vision_result_log.xml" relativeToChangelogFile="false"/>
     <include file="db/changelog/changes/011-aiq_scoring_config.xml" relativeToChangelogFile="false"/>
+    <include file="db/changelog/changes/012-aiq_asset_request.xml" relativeToChangelogFile="false"/>
 
     <!--
         Demo-only seed data (tenant_id = 'coca-cola'). Gated by context="demo"

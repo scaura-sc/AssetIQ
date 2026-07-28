@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd">
+
+    <changeSet id="012-1-create-aiq_asset_request" author="assetiq">
+        <createTable tableName="aiq_asset_request">
+            <!-- Application-generated Snowflake id — no autoIncrement, see SnowflakeIdGenerator -->
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="tenant_id" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="request_number" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="outlet_code" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="outlet_name" type="VARCHAR(100)"/>
+            <column name="territory_code" type="VARCHAR(30)"/>
+            <column name="salesman_code" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category_code" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type_code" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reason" type="VARCHAR(255)"/>
+            <column name="status" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="requested_by_user_code" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="requested_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <!-- approved_asset_id is a soft reference to aiq_asset.id — no FK, per the
+                 no-FK design rule; every other cross-table reference in this schema
+                 follows the same convention. -->
+            <column name="approved_asset_id" type="BIGINT"/>
+            <column name="approved_by_user_code" type="VARCHAR(50)"/>
+            <column name="approved_at" type="TIMESTAMP"/>
+            <column name="rejection_reason" type="VARCHAR(255)"/>
+            <column name="rejected_by_user_code" type="VARCHAR(50)"/>
+            <column name="rejected_at" type="TIMESTAMP"/>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="012-2-index-aiq_asset_request-number" author="assetiq">
+        <createIndex tableName="aiq_asset_request" indexName="ux_asset_request_tenant_number" unique="true">
+            <column name="tenant_id"/>
+            <column name="request_number"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="012-3-index-aiq_asset_request-status" author="assetiq">
+        <createIndex tableName="aiq_asset_request" indexName="idx_asset_request_tenant_status">
+            <column name="tenant_id"/>
+            <column name="status"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="012-4-index-aiq_asset_request-outlet" author="assetiq">
+        <createIndex tableName="aiq_asset_request" indexName="idx_asset_request_tenant_outlet">
+            <column name="tenant_id"/>
+            <column name="outlet_code"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

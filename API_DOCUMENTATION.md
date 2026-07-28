@@ -5,7 +5,7 @@ For UI integration against the local backend.
 - **Base URL (same machine):** `http://localhost:8081`
 - **Base URL (LAN):** `http://192.168.0.100:8081` *(DHCP-assigned — re-check with `ipconfig getifaddr en0` if it stops working; port is 8081, not 8080 — 8080 is used by another local project on this machine)*
 - **Demo tenant:** `coca-cola`
-
+first
 ---
 
 ## 1. Conventions every screen needs to know
@@ -473,7 +473,71 @@ Required: `photoAfterUrl`, `signatureUrl` (both mandatory to close). `labourCost
 
 ---
 
-## 8. Scoring Config & AHS (Asset Health Score) — `/api/scoring-config`
+## 8. Asset Requests — `/api/asset-requests`
+
+The flow for an outlet that needs an asset but doesn't know (or care) which specific one it'll get — it only knows the **category + type** it wants (e.g. "a COOLER of type VISI_COOLER"). A portal user then checks what's actually in stock matching that category/type and approves the request against one specific asset — which **deploys it** to the outlet in the same step (reuses `POST /api/assets/{id}/deploy`'s own logic and preconditions internally, so nothing here bypasses those rules).
+
+**Flow:**
+1. Outlet/salesman → `POST /api/asset-requests` (category + type only) → `status: PENDING`.
+2. Portal → `GET /api/asset-requests?status=PENDING` to see what needs action.
+3. Portal → `GET /api/asset-requests/{id}/available-stock` to see which real assets could fulfill it.
+4. Portal → `POST /api/asset-requests/{id}/approve` with one of those asset ids → deploys it and marks the request `APPROVED`. Or `POST /api/asset-requests/{id}/reject` with a reason.
+
+| Method | Path | Purpose |
+|---|---|---|
+| `POST` | `/api/asset-requests` | Outlet raises a request (category + type only) |
+| `GET` | `/api/asset-requests/{id}` | Get one request |
+| `GET` | `/api/asset-requests?status=&outletCode=&territoryCode=` | Portal list/search (all filters optional, combine freely) |
+| `GET` | `/api/asset-requests/{id}/available-stock` | Eligible assets matching the requested category/type — `STOCK`, `WORKING`, no active association |
+| `POST` | `/api/asset-requests/{id}/approve` | Pick an asset from available-stock, approve, and deploy it |
+| `POST` | `/api/asset-requests/{id}/reject` | Decline the request with a reason |
+
+**`POST` body (`AssetRequestCreateRequest`):**
+```json
+{
+  "outletCode": "OUT-JAYANAGAR",
+  "outletName": "Jayanagar Outlet",
+  "territoryCode": "TER-BLR-01",
+  "salesmanCode": "SM-1001",
+  "categoryCode": "FRIDGE",
+  "typeCode": "DEEP_FREEZER",
+  "reason": "Outlet needs a replacement freezer",
+  "requestedByUserCode": "SM-1001",
+  "requestedAt": "2026-07-28T11:00:00"
+}
+```
+Required: `outletCode`, `salesmanCode`, `categoryCode`, `typeCode`, `requestedByUserCode`, `requestedAt`. No `modelCode` field at all — that's the point, the outlet doesn't specify a model. `categoryCode`/`typeCode` must form a valid chain (same catalog validation as asset registration) or this returns `400`.
+
+**Response (`AssetRequestResponse`):** all of the above, plus `id`, `tenantId`, `requestNumber` (server-generated, e.g. `AR-1KTG678DF474`), `status` (`PENDING`/`APPROVED`/`REJECTED`), `approvedAssetId`, `approvedByUserCode`, `approvedAt`, `rejectionReason`, `rejectedByUserCode`, `rejectedAt`, `createdAt`, `updatedAt`.
+
+**`GET /{id}/available-stock`** → `AssetResponse[]` (same shape as `GET /api/assets`) — every asset the tenant owns matching this request's `categoryCode`+`typeCode`, filtered to `assetStatus: STOCK` + `workingStatus: WORKING`, **and** its current association (if any) is either absent or at a `WAREHOUSE` — a warehouse-associated asset *is* "in stock and available," not excluded. Anything actively associated to an `OUTLET`/`DISTRIBUTOR`/`VEHICLE`/`EMPLOYEE` is already spoken for and won't appear here. This is exactly what a portal screen should list for the approver to choose from.
+
+**On approve, which of `deploy`/`transfer` runs is decided automatically** based on the chosen asset's current state — not something the caller needs to think about: if it has no prior association, `deploy()` runs (fresh stock); if it has an active warehouse association, `transfer()` runs instead (deactivates the warehouse association, creates the new outlet one). Both paths end with the same result — the asset is `DEPLOYED` at the request's outlet — just via whichever underlying operation is valid for that asset's starting state.
+
+**`POST /{id}/approve` body (`AssetRequestApproveRequest`):**
+```json
+{
+  "assetId": "205668755760480256",
+  "approvedByUserCode": "portal-admin-1",
+  "reason": "Approved from stock"
+}
+```
+Required: `assetId` (should be one from `available-stock`, though it's re-validated regardless — see below), `approvedByUserCode`. `reason` optional — falls back to the original request's `reason` if omitted.
+
+Approving **re-runs every deploy precondition** via the same code path as `/deploy` — if the chosen `assetId` isn't actually `STOCK`+`WORKING` with no active association anymore (e.g. a race with another approval), you get the same `409` `deploy` would give, e.g. `"Asset AST-CC-0005 must be STOCK to deploy (is DEPLOYED)"`, and the request stays `PENDING` (nothing is partially applied). Approving a request that's already `APPROVED`/`REJECTED` also returns `409`: `"Asset request {requestNumber} is already {status}"`.
+
+**`POST /{id}/reject` body (`AssetRequestRejectRequest`):**
+```json
+{
+  "rejectedByUserCode": "portal-admin-1",
+  "rejectionReason": "No stock available for this type currently"
+}
+```
+Both fields required. Same "already APPROVED/REJECTED" `409` guard as approve.
+
+---
+
+## 9. Scoring Config & AHS (Asset Health Score) — `/api/scoring-config`
 
 Every asset carries an **AHS** (`ahsScore` on `AssetResponse`, 0-100) computed from 4 weighted components — **Presence, Purity, Condition, Uptime** — every time a visit capture is submitted. `/api/scoring-config` lets each tenant configure how much each component counts.
 
@@ -517,7 +581,7 @@ ahsScore = (presenceScore·presenceWeight + purityScore·purityWeight
 
 ---
 
-## 9. Quick reference table
+## 10. Quick reference table
 
 | Resource | Base path |
 |---|---|
@@ -526,6 +590,7 @@ ahsScore = (presenceScore·presenceWeight + purityScore·purityWeight
 | Assets (registration, deploy, transfer, swap, history) | `/api/assets` |
 | Visit Captures | `/api/visit-captures` |
 | Service Events (complaints, work orders) | `/api/service-events` |
+| Asset Requests (outlet request → approve from stock) | `/api/asset-requests` |
 | Scoring Config (AHS weightage) | `/api/scoring-config` |
 
 Every call needs the `X-Tenant-Id: coca-cola` header. Every response ID is a JSON **string**, not a number.

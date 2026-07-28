@@ -22,5 +22,8 @@ public interface AssetRepository extends JpaRepository<AiqAsset, Long> {
 
     List<AiqAsset> findByTenantIdAndAssetStatus(String tenantId, AssetStatus assetStatus);
 
+    List<AiqAsset> findByTenantIdAndAssetStatusAndCategoryCodeAndTypeCode(
+            String tenantId, AssetStatus assetStatus, String categoryCode, String typeCode);
+
     List<AiqAsset> findByTenantIdAndTerritoryCode(String tenantId, String territoryCode);
 }

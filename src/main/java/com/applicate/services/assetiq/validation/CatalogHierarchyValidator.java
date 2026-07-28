@@ -63,6 +63,18 @@ public class CatalogHierarchyValidator {
         }
     }
 
+    /** Same chain check as validateAssetCatalogChain, but for callers that only know category+type
+     * (no model) — e.g. an asset request naming just "a COOLER of type VISI_COOLER". */
+    public void validateCategoryTypeChain(String tenantId, String categoryCode, String typeCode) {
+        requireActiveAt(tenantId, CatalogLevel.CATEGORY, categoryCode);
+        AiqAssetCatalog type = requireActiveAt(tenantId, CatalogLevel.TYPE, typeCode);
+
+        if (!categoryCode.equals(type.getParentCode())) {
+            throw new BadRequestException(
+                    "type_code '" + typeCode + "' does not belong to category_code '" + categoryCode + "'");
+        }
+    }
+
     private AiqAssetCatalog requireActiveAt(String tenantId, CatalogLevel level, String code) {
         AiqAssetCatalog entry = assetCatalogRepository.findByTenantIdAndLevelAndCode(tenantId, level, code)
                 .orElseThrow(() -> new BadRequestException("No " + level + " catalog entry with code '" + code + "'"));

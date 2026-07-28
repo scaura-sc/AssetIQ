@@ -5,6 +5,8 @@ import com.applicate.services.assetiq.dto.association.AssociationResponse;
 import com.applicate.services.assetiq.dto.asset.AssetResponse;
 import com.applicate.services.assetiq.dto.deployment.DeployRequest;
 import com.applicate.services.assetiq.dto.deployment.DeployResponse;
+import com.applicate.services.assetiq.dto.deployment.ReceiveRequest;
+import com.applicate.services.assetiq.dto.deployment.ReceiveResponse;
 import com.applicate.services.assetiq.dto.deployment.SwapRequest;
 import com.applicate.services.assetiq.dto.deployment.SwapResponse;
 import com.applicate.services.assetiq.dto.deployment.TransferRequest;
@@ -128,6 +130,54 @@ public class AssetDeploymentService {
         // model/category's stock count here.
 
         return new DeployResponse(AssetResponse.from(asset), AssociationResponse.from(association), MovementLogResponse.from(movement));
+    }
+
+    // ---- F02b Receive newly-registered asset into warehouse stock ----
+
+    /** Same shape as deploy(), but for LocationType.WAREHOUSE and the asset stays STOCK
+     *  instead of moving to DEPLOYED — this is how a freshly-registered asset gets its
+     *  first-ever location, without pretending it's already at an outlet. */
+    public ReceiveResponse receive(Long assetId, ReceiveRequest request) {
+        String tenantId = TenantContext.getTenantId();
+        AiqAsset asset = assetService.requireOwned(assetId);
+
+        assetMovementValidator.validateDeployable(asset);
+        activeAssociationValidator.validateNoActiveAssociation(tenantId, assetId);
+
+        AiqAssetAssociation association = new AiqAssetAssociation();
+        association.setTenantId(tenantId);
+        association.setAssetId(assetId);
+        association.setAssetNumber(asset.getAssetNumber());
+        association.setLocationType(LocationType.WAREHOUSE);
+        association.setLocationCode(request.warehouseCode());
+        association.setLocationName(request.warehouseName());
+        association.setTerritoryCode(request.territoryCode());
+        association.setAssignmentDate(request.assignmentDate());
+        association.setAssignmentType(AssignmentType.PERMANENT);
+        association.setHasContract(false);
+        association.setExclusivityFlag(false);
+        association.setCreatedBy(request.movedByUserCode());
+        association = assetAssociationRepository.save(association);
+
+        AiqAssetMovementLog movement = new AiqAssetMovementLog();
+        movement.setTenantId(tenantId);
+        movement.setAssetId(assetId);
+        movement.setAssetNumber(asset.getAssetNumber());
+        movement.setMovementType(MovementType.ASSIGN);
+        movement.setToLocationType(LocationType.WAREHOUSE);
+        movement.setToLocationCode(request.warehouseCode());
+        movement.setMovedByUserCode(request.movedByUserCode());
+        movement.setReason(request.reason());
+        movement.setMovedAt(LocalDateTime.now());
+        movement = assetMovementLogRepository.save(movement);
+
+        asset.setLocationType(LocationType.WAREHOUSE);
+        asset.setLocationCode(request.warehouseCode());
+        asset.setTerritoryCode(request.territoryCode());
+        asset.setUpdatedBy(request.movedByUserCode());
+        asset = assetRepository.save(asset);
+
+        return new ReceiveResponse(AssetResponse.from(asset), AssociationResponse.from(association), MovementLogResponse.from(movement));
     }
 
     // ---- F06 Asset Transfer Between Locations ----

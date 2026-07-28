@@ -6,6 +6,8 @@ import com.applicate.services.assetiq.dto.association.AssociationResponse;
 import com.applicate.services.assetiq.dto.bulkupload.BulkUploadResult;
 import com.applicate.services.assetiq.dto.deployment.DeployRequest;
 import com.applicate.services.assetiq.dto.deployment.DeployResponse;
+import com.applicate.services.assetiq.dto.deployment.ReceiveRequest;
+import com.applicate.services.assetiq.dto.deployment.ReceiveResponse;
 import com.applicate.services.assetiq.dto.deployment.SwapRequest;
 import com.applicate.services.assetiq.dto.deployment.SwapResponse;
 import com.applicate.services.assetiq.dto.deployment.TransferRequest;
@@ -67,6 +69,11 @@ public class AssetController {
     @PostMapping("/{id}/deploy")
     public DeployResponse deploy(@PathVariable Long id, @Valid @RequestBody DeployRequest request) {
         return assetDeploymentService.deploy(id, request);
+    }
+
+    @PostMapping("/{id}/receive")
+    public ReceiveResponse receive(@PathVariable Long id, @Valid @RequestBody ReceiveRequest request) {
+        return assetDeploymentService.receive(id, request);
     }
 
     @PostMapping("/{id}/transfer")

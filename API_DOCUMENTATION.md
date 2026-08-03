@@ -60,7 +60,7 @@ No CORS configuration exists yet. If the UI is a browser app served from a diffe
 
 ### 1.6 Pagination
 
-No endpoint paginates. List endpoints return the full result set for the tenant (and any filters given) in one array.
+Only one endpoint paginates: `GET /api/assets/fleet-snapshot` (see §5.3) — it's the first, and its envelope shape (`{ items, page }`) is a new convention, not something older endpoints already follow. Every other list endpoint still returns the full result set for the tenant (and any filters given) in one flat array.
 
 ---
 
@@ -318,6 +318,58 @@ Required: `oldAssetId`, `newAssetId`, `movedByUserCode`. `swapReference` is opti
 
 **`MovementLogResponse` fields:** `id`, `tenantId`, `assetId`, `assetNumber`, `movementType`, `fromLocationType`, `fromLocationCode`, `toLocationType`, `toLocationCode`, `movedByUserCode`, `approvedByUserCode`, `approvalRef`, `reason`, `gpsLat`, `gpsLng`, `movedAt`.
 
+### 5.3 Fleet-wide snapshot (paginated, filterable) — `GET /api/assets/fleet-snapshot`
+
+Fixes the "list all assets, then fan out 3 calls per asset" pattern (association + movements + captures) that doesn't scale past a demo tenant. One paginated call returns every asset pre-joined with its **current** association and **latest** capture — no history, since no screen reads it from here (use §5.2's per-asset endpoints for history/detail views).
+
+**Query params (all optional except pagination defaults):**
+
+| Param | Filters on | Default |
+|---|---|---|
+| `territoryCode` | `Asset.territoryCode` | — |
+| `outletCode` / `locationCode` | `Asset.locationCode` (same filter, two names — `locationCode` wins if both sent) | — |
+| `assetStatus` | `Asset.assetStatus` (enum, see §2) | — |
+| `modelCode` | `Asset.modelCode` | — |
+| `search` | free text, case-insensitive, over `assetNumber` OR `assetName` | — |
+| `page` | zero-based page index | `0` |
+| `size` | page size | `50` |
+
+**Response:**
+```json
+{
+  "items": [
+    {
+      "asset": { /* full AssetResponse, same shape as GET /api/assets */ },
+      "currentAssociation": {
+        "locationName": "Jayanagar Outlet",
+        "assignmentDate": "2025-05-22",
+        "custodianName": null,
+        "hasContract": false,
+        "purityClausePct": null,
+        "exclusivityFlag": false
+      },
+      "latestCapture": {
+        "capturedAt": "2026-07-23T11:15:00",
+        "scanMethod": "QR",
+        "purityPct": 96.5,
+        "competitorPresent": false,
+        "competitorBrand": null
+      }
+    }
+  ],
+  "page": { "number": 0, "size": 50, "totalElements": 1017, "totalPages": 21 }
+}
+```
+`currentAssociation` is `null` when the asset has no active association; `latestCapture` is `null` when the asset has never been captured. Both are trimmed, fixed field sets — not the full `AssociationResponse`/`VisitCaptureResponse` shapes from §5.2/§6.
+
+### 5.4 Movement activity search — `GET /api/assets/movements/search`
+
+A date-bounded activity feed **across assets** (time-range scan) — different access pattern from `GET /api/assets/{id}/movements` (full per-asset history), and not merged into the fleet-snapshot response above.
+
+**Query params (all optional):** `assetId`, `territoryCode` (resolved via `Asset.territoryCode` — there's no `territoryCode` column on the movement log itself), `from`, `to` (both `LocalDateTime`, filtering on `movedAt`, inclusive).
+
+**Response:** flat `MovementLogResponse[]` (same shape as §5.2), unpaginated.
+
 ---
 
 ## 6. Visit Captures — `/api/visit-captures`
@@ -374,6 +426,14 @@ Required: `visitId`, `visitDate`, `outletCode`, `salesmanCode`, `assetId`, `role
 - Sending **both** `purityRawScore` and `purityPct` is rejected (`400`).
 
 **Response (`VisitCaptureResponse`):** request fields above plus `id`, `tenantId`, `assetNumber`, `puritySource` (`MANUAL`/`AI_VISION`, derived from which path was used), `conditionSource`, `workingStatusSource`, `createdAt`.
+
+### 6.1 Capture activity search — `GET /api/visit-captures/search`
+
+Same idea as §5.4's movement search: a date-bounded activity feed **across assets**, separate from `GET /api/visit-captures?assetId=` (full per-asset history) and from the fleet-snapshot's per-asset "latest capture only" join.
+
+**Query params (all optional):** `assetId`, `territoryCode` (a real column here, unlike movements), `from`, `to` (both `LocalDateTime`, filtering on `capturedAt`, inclusive).
+
+**Response:** flat `VisitCaptureResponse[]` (same shape as above), unpaginated.
 
 ---
 
@@ -680,7 +740,7 @@ ahsScore = (presenceScore·presenceWeight + purityScore·purityWeight
 |---|---|
 | Asset Catalog | `/api/asset-catalog` |
 | Vendors | `/api/vendors` |
-| Assets (registration, deploy, transfer, swap, history) | `/api/assets` |
+| Assets (registration, deploy, transfer, swap, history, fleet-snapshot, movement search) | `/api/assets` |
 | Visit Captures | `/api/visit-captures` |
 | Service Events (complaints, work orders) | `/api/service-events` |
 | Asset Requests (outlet request → approve from stock) | `/api/asset-requests` |

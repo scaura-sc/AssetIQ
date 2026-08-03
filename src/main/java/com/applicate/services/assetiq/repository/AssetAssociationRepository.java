@@ -15,5 +15,7 @@ public interface AssetAssociationRepository extends JpaRepository<AiqAssetAssoci
 
     Optional<AiqAssetAssociation> findByTenantIdAndAssetIdAndIsActiveTrue(String tenantId, Long assetId);
 
+    List<AiqAssetAssociation> findByTenantIdAndAssetIdInAndIsActiveTrue(String tenantId, List<Long> assetIds);
+
     List<AiqAssetAssociation> findByTenantIdAndLocationTypeAndLocationCode(String tenantId, LocationType locationType, String locationCode);
 }

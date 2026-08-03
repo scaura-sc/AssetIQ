@@ -14,9 +14,11 @@ import com.applicate.services.assetiq.repository.AssetRepository;
 import com.applicate.services.assetiq.repository.VisitAssetCaptureRepository;
 import com.applicate.services.assetiq.util.PurityScaleConverter;
 import com.applicate.services.assetiq.validation.ReferenceValidationService;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /** F09 — Visit Asset Capture, F10 — Purity Scoring. */
@@ -136,6 +138,13 @@ public class VisitAssetCaptureService {
     public List<VisitCaptureResponse> listByAsset(Long assetId) {
         return visitAssetCaptureRepository.findByTenantIdAndAssetIdOrderByCapturedAtDesc(TenantContext.getTenantId(), assetId)
                 .stream().map(VisitCaptureResponse::from).toList();
+    }
+
+    /** Backs GET /visit-captures/search — a date-bounded activity feed across assets, not a per-asset history read. */
+    public List<VisitCaptureResponse> search(Long assetId, String territoryCode, LocalDateTime from, LocalDateTime to) {
+        Specification<AiqVisitAssetCapture> spec =
+                VisitCaptureSpecifications.filter(TenantContext.getTenantId(), assetId, territoryCode, from, to);
+        return visitAssetCaptureRepository.findAll(spec).stream().map(VisitCaptureResponse::from).toList();
     }
 
     private AiqVisitAssetCapture requireOwned(Long id) {

@@ -4,11 +4,12 @@ import com.applicate.services.assetiq.entity.AiqAsset;
 import com.applicate.services.assetiq.entity.enums.AssetStatus;
 import com.applicate.services.assetiq.entity.enums.LocationType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface AssetRepository extends JpaRepository<AiqAsset, Long> {
+public interface AssetRepository extends JpaRepository<AiqAsset, Long>, JpaSpecificationExecutor<AiqAsset> {
 
     Optional<AiqAsset> findByTenantIdAndId(String tenantId, Long id);
 

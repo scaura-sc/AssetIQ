@@ -27,6 +27,7 @@ import com.applicate.services.assetiq.repository.AssetRepository;
 import com.applicate.services.assetiq.util.BusinessCodeGenerator;
 import com.applicate.services.assetiq.validation.ActiveAssociationValidator;
 import com.applicate.services.assetiq.validation.AssetMovementValidator;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -374,5 +375,19 @@ public class AssetDeploymentService {
     public List<MovementLogResponse> listMovementHistory(Long assetId) {
         return assetMovementLogRepository.findByTenantIdAndAssetIdOrderByMovedAtDesc(TenantContext.getTenantId(), assetId)
                 .stream().map(MovementLogResponse::from).toList();
+    }
+
+    /** Backs GET /assets/movements/search — a date-bounded activity feed across assets, not a per-asset history read. */
+    public List<MovementLogResponse> searchMovements(Long assetId, String territoryCode, LocalDateTime from, LocalDateTime to) {
+        String tenantId = TenantContext.getTenantId();
+
+        // territory isn't a column on aiq_asset_movement_log — resolved via aiq_asset.territory_code
+        // instead of a DB join, same approach as ServiceEventService.search.
+        List<Long> territoryAssetIds = territoryCode != null
+                ? assetRepository.findByTenantIdAndTerritoryCode(tenantId, territoryCode).stream().map(AiqAsset::getId).toList()
+                : null;
+
+        Specification<AiqAssetMovementLog> spec = AssetMovementSpecifications.filter(tenantId, assetId, from, to, territoryAssetIds);
+        return assetMovementLogRepository.findAll(spec).stream().map(MovementLogResponse::from).toList();
     }
 }
